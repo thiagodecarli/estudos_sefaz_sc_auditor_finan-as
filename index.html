@@ -76,6 +76,812 @@
                 <label class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white cursor-pointer transition flex items-center gap-1">
                     📂 Importar <input type="file" id="importFile" onchange="importBackup(event)" class="hidden" accept=".json">
                 </label>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 mt-6 space-y-6">
+
+        <!-- Cards de Estatísticas -->
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+            <div class="theme-card p-4 rounded-2xl border">
+                <span class="text-[11px] font-bold uppercase tracking-wider theme-text-muted">Progresso Geral</span>
+                <div class="text-2xl font-extrabold mt-1 text-emerald-400" id="statOverallPct">0%</div>
+                <div class="text-xs theme-text-muted mt-1"><span id="statOverallCount">0</span> tópicos concluídos</div>
+            </div>
+
+            <div class="theme-card p-4 rounded-2xl border">
+                <span class="text-[11px] font-bold uppercase tracking-wider theme-text-muted">Teoria Vista</span>
+                <div class="text-2xl font-extrabold mt-1 text-blue-400" id="statTheoryPct">0%</div>
+                <div class="text-xs theme-text-muted mt-1"><span id="statTheoryCount">0</span> concluídos</div>
+            </div>
+
+            <div class="theme-card p-4 rounded-2xl border">
+                <span class="text-[11px] font-bold uppercase tracking-wider theme-text-muted">Revisões Feitas</span>
+                <div class="text-2xl font-extrabold mt-1 text-purple-400" id="statRevCount">0</div>
+                <div class="text-xs theme-text-muted mt-1">Registros de revisão</div>
+            </div>
+
+            <div class="theme-card p-4 rounded-2xl border">
+                <span class="text-[11px] font-bold uppercase tracking-wider theme-text-muted">Questões Feitas</span>
+                <div class="text-2xl font-extrabold mt-1 text-amber-400" id="statExQty">0</div>
+                <div class="text-xs theme-text-muted mt-1"><span id="statExSessions">0</span> sessões de treino</div>
+            </div>
+
+            <div class="theme-card p-4 rounded-2xl border col-span-2 md:col-span-1">
+                <span class="text-[11px] font-bold uppercase tracking-wider theme-text-muted">Taxa de Acertos</span>
+                <div class="text-2xl font-extrabold mt-1 text-emerald-400" id="statAccPct">0%</div>
+                <div class="text-xs theme-text-muted mt-1"><span id="statExAcc">0</span> acertos totais</div>
+            </div>
+        </div>
+
+        <!-- Navegação por Abas -->
+        <div class="flex border-b theme-border space-x-2 overflow-x-auto">
+            <button onclick="switchTab('overview')" id="tabBtnOverview" class="px-5 py-3 font-semibold text-sm border-b-2 border-emerald-400 text-emerald-400 whitespace-nowrap">
+                📋 Panorama do Edital
+            </button>
+            <button onclick="switchTab('p1')" id="tabBtnP1" class="px-5 py-3 font-semibold text-sm border-b-2 border-transparent theme-text-muted hover:text-white whitespace-nowrap">
+                📘 Conhecimentos Gerais (P1)
+            </button>
+            <button onclick="switchTab('p2')" id="tabBtnP2" class="px-5 py-3 font-semibold text-sm border-b-2 border-transparent theme-text-muted hover:text-white whitespace-nowrap">
+                📙 Conhecimentos Específicos (P2 - Peso 2)
+            </button>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div id="tabContent"></div>
+
+    </main>
+
+    <script>
+        const EXAM_DATE = new Date("2026-11-22T00:00:00");
+
+        // Retorna dinamicamente a data atual do dispositivo no formato YYYY-MM-DD
+        function getTodayStr() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        const EDITAL_DATA = {
+            p1: [
+                {
+                    id: "p1_portugues",
+                    title: "Língua Portuguesa",
+                    topics: [
+                        "Compreensão e interpretação de textos de gêneros variados",
+                        "Reconhecimento de tipos e gêneros textuais",
+                        "Domínio da estrutura morfossintática do período",
+                        "Emprego dos tempos e modos verbais",
+                        "Domínio dos mecanismos de coesão textual",
+                        "Concordância verbal e nominal",
+                        "Regência verbal e nominal",
+                        "Emprego do sinal indicativo de crase",
+                        "Pontuação e sintaxe da oração e do período"
+                    ]
+                },
+                {
+                    id: "p1_rlm_est",
+                    title: "Raciocínio Lógico-Matemático, Estatística e Matemática Financeira",
+                    topics: [
+                        "Lógica proposicional e de argumentação",
+                        "Operações com conjuntos e combinatória",
+                        "Probabilidade básica e condicional",
+                        "Estatística Descritiva: médias, mediana, moda e variância",
+                        "Juros Simples e Compostos",
+                        "Taxas nominais, efetivas e equivalentes",
+                        "Sistemas de Amortização (PRICE e SAC)",
+                        "Valor Presente Líquido (VPL) e Taxa Interna de Retorno (TIR)"
+                    ]
+                },
+                {
+                    id: "p1_direito_const",
+                    title: "Direito Constitucional",
+                    topics: [
+                        "Principios Fundamentais da CF/88",
+                        "Direitos e Garantias Fundamentais",
+                        "Organização Político-Administrativa do Estado",
+                        "Administração Pública (Arts. 37 a 41)",
+                        "Poder Executivo e Poder Legislativo",
+                        "Sistema Tributário Nacional na CF/88",
+                        "Finanças Públicas e Orçamento na CF/88"
+                    ]
+                },
+                {
+                    id: "p1_direito_admin",
+                    title: "Direito Administrativo",
+                    topics: [
+                        "Estado, Governo e Administração Pública",
+                        "Atos Administrativos: conceitos, atributos e anulação",
+                        "Agentes Públicos e Regime Jurídico",
+                        "Poderes da Administração Pública",
+                        "Licitações e Contratos Administrativos (Lei nº 14.133/2021)",
+                        "Serviços Públicos e Concessões",
+                        "Improbidade Administrativa (Lei nº 8.429/1992)",
+                        "Responsabilidade Civil do Estado"
+                    ]
+                },
+                {
+                    id: "p1_ciencia_dados",
+                    title: "Ciência de Dados e Tecnologia da Informação",
+                    topics: [
+                        "Conceitos de Banco de Dados Relacionais e SQL",
+                        "Modelagem dimensional e Data Warehouse",
+                        "Conceitos de Business Intelligence e Dashboards",
+                        "Noções de Linguagem Python para Análise de Dados",
+                        "Governança de Dados e LGPD",
+                        "Segurança da Informação e Criptografia"
+                    ]
+                }
+            ],
+            p2: [
+                {
+                    id: "p2_ciclo_orcamentario",
+                    title: "Ciclo de Planejamento e Gestão Orçamentária",
+                    topics: [
+                        "O processo de planejamento público no Brasil: PPA, LDO e LOA",
+                        "Conceitos e funções econômicas no orçamento público",
+                        "Princípios Orçamentários e suas exceções",
+                        "Classificação institucional, funcional e programática",
+                        "Classificação da Receita Pública por natureza e fontes",
+                        "Estágios da Receita Pública: previsão, lançamento, arrecadação e recolhimento",
+                        "Classificação da Despesa Pública (natureza e funcional)",
+                        "Estágios da Despesa Pública: empenho, liquidação e pagamento",
+                        "Restos a Pagar e Despesas de Exercícios Anteriores",
+                        "Créditos Adicionais: suplementares, especiais e extraordinários"
+                    ]
+                },
+                {
+                    id: "p2_lrf",
+                    title: "Lei de Responsabilidade Fiscal (LC nº 101/2000)",
+                    topics: [
+                        "Princípios, objetivos e abrangência da LRF",
+                        "Planejamento: Anexos de Metas Fiscais e Riscos Fiscais na LDO",
+                        "Receita Corrente Líquida (RCL): conceito e apuração",
+                        "Geração da Despesa Pública e Despesa Obrigatória de Caráter Continuado",
+                        "Despesa Total com Pessoal: limites globais e prudenciais",
+                        "Dívida Pública, Operações de Crédito e Garantias",
+                        "Transparência, Controle e Fiscalização da Gestão Fiscal"
+                    ]
+                },
+                {
+                    id: "p2_gestao_riscos_custos",
+                    title: "Gestão de Riscos, Custos e Avaliação de Políticas Públicas",
+                    topics: [
+                        "Gestão de Riscos e Controles Internos no Setor Público",
+                        "Modelos COSO-ERM e ABNT NBR ISO 31000",
+                        "Sistema de Custos no Setor Público",
+                        "Indicadores de Desempenho: Eficiência, Eficácia e Efetividade",
+                        "Avaliação Ex-ante e Ex-post de Políticas Públicas"
+                    ]
+                },
+                {
+                    id: "p2_admin_geral",
+                    title: "Administração Geral e Estratégica",
+                    topics: [
+                        "Evolução do pensamento administrativo",
+                        "Processo Organizacional: Planejamento, Organização, Direção e Controle",
+                        "Planejamento Estratégico: Matriz SWOT, BSC e OKRs",
+                        "Gestão de Processos (BPM) e Melhoria Contínua",
+                        "Gestão de Projetos: PMBOK e Metodologias Ágeis"
+                    ]
+                }
+            ]
+        };
+
+        let appState = {
+            theme: 'dark',
+            activeTab: 'overview',
+            progress: {}
+        };
+
+        function loadState() {
+            const saved = localStorage.getItem('sefaz_sc_study_app');
+            if (saved) {
+                try {
+                    appState = JSON.parse(saved);
+                } catch (e) {
+                    console.error("Erro ao carregar dados:", e);
+                }
+            }
+            if (!appState.progress) appState.progress = {};
+            if (!appState.activeTab) appState.activeTab = 'overview';
+            applyTheme();
+            updateCountdown();
+            renderAll();
+        }
+
+        function saveState() {
+            localStorage.setItem('sefaz_sc_study_app', JSON.stringify(appState));
+            updateStats();
+        }
+
+        function toggleTheme() {
+            appState.theme = appState.theme === 'dark' ? 'light' : 'dark';
+            applyTheme();
+            saveState();
+        }
+
+        function applyTheme() {
+            document.body.className = appState.theme === 'dark' ? 'theme-dark min-h-full font-sans pb-12' : 'theme-light min-h-full font-sans pb-12';
+            document.getElementById('themeIcon').innerText = appState.theme === 'dark' ? '☀️' : '🌙';
+            document.getElementById('themeLabel').innerText = appState.theme === 'dark' ? 'Modo Claro' : 'Modo Escuro';
+        }
+
+        function updateCountdown() {
+            const now = new Date();
+            const diffTime = EXAM_DATE - now;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const badge = document.getElementById('countdownBadge');
+            if (diffDays > 0) {
+                badge.innerText = `⏳ Prova em ${diffDays} dias (22/11/2026)`;
+            } else {
+                badge.innerText = `🎯 Prova Hoje!`;
+            }
+        }
+
+        function switchTab(tab) {
+            appState.activeTab = tab;
+            const btnOverview = document.getElementById('tabBtnOverview');
+            const btnP1 = document.getElementById('tabBtnP1');
+            const btnP2 = document.getElementById('tabBtnP2');
+
+            const activeClass = "px-5 py-3 font-semibold text-sm border-b-2 border-emerald-400 text-emerald-400 whitespace-nowrap";
+            const inactiveClass = "px-5 py-3 font-semibold text-sm border-b-2 border-transparent theme-text-muted hover:text-white whitespace-nowrap";
+
+            btnOverview.className = tab === 'overview' ? activeClass : inactiveClass;
+            btnP1.className = tab === 'p1' ? activeClass : inactiveClass;
+            btnP2.className = tab === 'p2' ? activeClass : inactiveClass;
+
+            renderTabContent();
+        }
+
+        function renderTabContent() {
+            const container = document.getElementById('tabContent');
+            if (appState.activeTab === 'overview') {
+                container.innerHTML = renderOverviewTab();
+            } else {
+                container.innerHTML = `<div id="subjectList" class="space-y-4"></div>`;
+                renderSubjects();
+            }
+        }
+
+        function renderOverviewTab() {
+            return `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="theme-card p-6 rounded-2xl border space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-2xl">🏛️</span>
+                            <div>
+                                <h3 class="font-bold text-base">Cargo e Vagas</h3>
+                                <p class="text-xs theme-text-muted">Secretaria de Estado da Fazenda de Santa Catarina</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2 text-xs divide-y theme-border">
+                            <div class="flex justify-between py-1.5"><span class="theme-text-muted">Cargo:</span><span class="font-semibold">Auditor Estadual de Finanças Públicas</span></div>
+                            <div class="flex justify-between py-1.5"><span class="theme-text-muted">Área:</span><span class="font-semibold">Administração e Engenharias (Cargo A01)</span></div>
+                            <div class="flex justify-between py-1.5"><span class="theme-text-muted">Escolaridade:</span><span class="font-semibold">Nível Superior Requerido</span></div>
+                            <div class="flex justify-between py-1.5"><span class="theme-text-muted">Carga Horária:</span><span class="font-semibold">40 horas semanais</span></div>
+                            <div class="flex justify-between py-1.5"><span class="theme-text-muted">Local das Provas:</span><span class="font-semibold text-emerald-400">Florianópolis / SC</span></div>
+                        </div>
+                    </div>
+
+                    <div class="theme-card p-6 rounded-2xl border space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-2xl">🎯</span>
+                            <div>
+                                <h3 class="font-bold text-base">Estrutura das Provas Objetivas</h3>
+                                <p class="text-xs theme-text-muted">Distribuição de pesos e turnos de aplicação</p>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="theme-subcard p-3 rounded-xl border">
+                                <div class="flex justify-between font-bold text-xs text-blue-400">
+                                    <span>PROVA 1 — Conhecimentos Gerais (P1)</span>
+                                    <span>Peso 1.0</span>
+                                </div>
+                                <p class="text-xs theme-text-muted mt-1">80 Questões • Turno da Manhã (4 horas de duração)</p>
+                            </div>
+
+                            <div class="theme-subcard p-3 rounded-xl border">
+                                <div class="flex justify-between font-bold text-xs text-emerald-400">
+                                    <span>PROVA 2 — Conhecimentos Específicos (P2)</span>
+                                    <span>Peso 2.0 (Prioritária)</span>
+                                </div>
+                                <p class="text-xs theme-text-muted mt-1">100 Questões • Turno da Tarde (5 horas de duração)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSubjects() {
+            const container = document.getElementById('subjectList');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const subjects = EDITAL_DATA[appState.activeTab] || [];
+
+            subjects.forEach(sub => {
+                const subCard = document.createElement('div');
+                subCard.className = 'theme-card rounded-2xl border overflow-hidden shadow-sm';
+
+                let topicsHtml = sub.topics.map((top, idx) => renderTopicItem(sub.id, idx, top)).join('');
+
+                subCard.innerHTML = `
+                    <div class="p-4 theme-subcard border-b flex justify-between items-center cursor-pointer" onclick="toggleSubjectAccordion('${sub.id}')">
+                        <div class="flex items-center space-x-3">
+                            <h2 class="font-bold text-base">${sub.title}</h2>
+                            <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20">${sub.topics.length} tópicos</span>
+                        </div>
+                        <span id="arrow_${sub.id}" class="text-xs theme-text-muted transform transition-transform">▼</span>
+                    </div>
+                    <div id="body_${sub.id}" class="divide-y theme-border">
+                        ${topicsHtml}
+                    </div>
+                `;
+                container.appendChild(subCard);
+            });
+        }
+
+        function renderTopicItem(subjectId, topicIdx, topicText) {
+            const topicKey = `${subjectId}_${topicIdx}`;
+            const todayStr = getTodayStr();
+
+            const data = appState.progress[topicKey] || {
+                theory: false,
+                theoryDate: '',
+                revisions: [],
+                exerciseSessions: [],
+                link: '',
+                notes: ''
+            };
+
+            let totalQty = 0;
+            let totalAcc = 0;
+            (data.exerciseSessions || []).forEach(s => {
+                totalQty += Number(s.qty || 0);
+                totalAcc += Number(s.acc || 0);
+            });
+            let accPct = totalQty > 0 ? Math.round((totalAcc / totalQty) * 100) : 0;
+
+            const hasLink = data.link && data.link.trim().length > 0;
+
+            return `
+                <div class="p-4 space-y-3" id="topic_row_${topicKey}">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+                        <div class="flex-1 min-w-0 pr-2">
+                            <span class="text-xs font-bold theme-text-muted mr-2">#${topicIdx + 1}</span>
+                            <span class="text-sm font-medium leading-normal break-words">${topicText}</span>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2">
+                            <div class="flex items-center space-x-1.5 p-1.5 px-3 rounded-xl border text-xs ${data.theory ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400' : 'theme-subcard'}">
+                                <span class="font-bold">${data.theory ? '✓ Teoria' : 'Teoria Pendente'}</span>
+                                ${data.theoryDate ? `<span class="text-[11px] theme-text-muted">(${data.theoryDate})</span>` : ''}
+                            </div>
+
+                            ${hasLink ? `
+                                <a href="${data.link}" target="_blank" rel="noopener" class="px-3 py-1.5 bg-blue-600/20 text-blue-400 border border-blue-500/30 hover:bg-blue-600/30 rounded-xl text-xs font-semibold flex items-center gap-1">
+                                    🔗 Abrir Caderno TEC
+                                </a>
+                            ` : ''}
+
+                            <div class="px-2.5 py-1.5 theme-subcard border rounded-xl font-mono text-xs font-bold ${accPct >= 80 ? 'text-emerald-400' : accPct >= 60 ? 'text-amber-400' : 'text-rose-400'}">
+                                ${totalQty > 0 ? `${accPct}% acertos (${totalAcc}/${totalQty})` : 'Sem exercícios'}
+                            </div>
+
+                            <button onclick="toggleDetails('${topicKey}')" class="px-3 py-1.5 theme-subcard border hover:opacity-80 rounded-xl text-xs font-semibold flex items-center gap-1">
+                                ⚙️ Detalhes & Histórico
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="details_${topicKey}" class="hidden pt-3 border-t theme-border space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-3">
+                                <div class="theme-subcard p-3 rounded-xl border space-y-2">
+                                    <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-400">📖 Data de Estudo da Teoria</h4>
+                                    <div class="flex items-center space-x-2">
+                                        <input type="date" id="theoryDate_input_${topicKey}" max="${todayStr}" value="${data.theoryDate || todayStr}" class="flex-1 theme-input border rounded p-1.5 text-xs">
+                                        <button onclick="saveTheoryDate('${topicKey}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-lg text-xs transition">
+                                            Salvar Teoria
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="theme-subcard p-3 rounded-xl border space-y-2">
+                                    <h4 class="text-xs font-bold uppercase tracking-wider text-amber-400">➕ Registrar Nova Sessão de Exercícios</h4>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <div>
+                                            <label class="text-[10px] theme-text-muted block">Qtd Questões</label>
+                                            <input type="number" id="exQty_input_${topicKey}" placeholder="Ex: 20" class="w-full theme-input border rounded p-1 text-xs text-center">
+                                        </div>
+                                        <div>
+                                            <label class="text-[10px] theme-text-muted block">Acertos</label>
+                                            <input type="number" id="exAcc_input_${topicKey}" placeholder="Ex: 18" class="w-full theme-input border rounded p-1 text-xs text-center">
+                                        </div>
+                                        <div>
+                                            <label class="text-[10px] theme-text-muted block">Data</label>
+                                            <input type="date" id="exDate_input_${topicKey}" max="${todayStr}" value="${todayStr}" class="w-full theme-input border rounded p-1 text-[11px]">
+                                        </div>
+                                    </div>
+                                    <button onclick="addExerciseSession('${topicKey}')" class="w-full py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-semibold rounded-lg text-xs transition">
+                                        Salvar Sessão de Exercícios
+                                    </button>
+                                </div>
+
+                                <div class="theme-subcard p-3 rounded-xl border space-y-2">
+                                    <h4 class="text-xs font-bold uppercase tracking-wider text-purple-400">📅 Registrar Data de Revisão</h4>
+                                    <div class="flex items-center space-x-2">
+                                        <input type="date" id="revDate_input_${topicKey}" max="${todayStr}" value="${todayStr}" class="flex-1 theme-input border rounded p-1.5 text-xs">
+                                        <button onclick="addRevision('${topicKey}')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded-lg text-xs transition">
+                                            Adicionar Revisão
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="theme-subcard p-3 rounded-xl border space-y-2">
+                                    <h4 class="text-xs font-bold uppercase tracking-wider text-blue-400">🔗 Link do Caderno TEC / Questões</h4>
+                                    <div class="flex items-center space-x-2">
+                                        <input type="url" id="link_input_${topicKey}" value="${data.link || ''}" placeholder="https://www.tecconcursos.com.br/cadernos/..." class="flex-1 theme-input border rounded p-1.5 text-xs">
+                                        <button onclick="saveLink('${topicKey}')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-lg text-xs transition">
+                                            Salvar Link
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold uppercase tracking-wider theme-text-muted block">📝 Resumo Rápido & Anotações do Tópico</label>
+                                <textarea oninput="updateNotes('${topicKey}', this.value)" placeholder="Digite aqui resumos, pegadinhas da banca FCC ou leis importantes..." class="w-full h-56 theme-input border rounded-xl p-2.5 text-xs focus:outline-none resize-y">${data.notes || ''}</textarea>
+                                <span class="text-[10px] theme-text-muted block text-right">Salvo automaticamente no navegador</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                            <div class="theme-subcard p-3 rounded-xl border">
+                                <h5 class="text-xs font-bold text-amber-400 mb-2">Histórico de Treinos</h5>
+                                ${renderExerciseHistory(topicKey, data.exerciseSessions)}
+                            </div>
+                            <div class="theme-subcard p-3 rounded-xl border">
+                                <h5 class="text-xs font-bold text-purple-400 mb-2">Histórico de Revisões</h5>
+                                ${renderRevisionHistory(topicKey, data.revisions)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderExerciseHistory(topicKey, sessions) {
+            if (!sessions || sessions.length === 0) {
+                return `<p class="text-xs theme-text-muted italic">Nenhum treino registrado ainda.</p>`;
+            }
+            return `
+                <div class="space-y-1 max-h-36 overflow-y-auto pr-1 divide-y theme-border">
+                    ${sessions.map((s, idx) => {
+                        const pct = Math.round((s.acc / s.qty) * 100);
+                        return `
+                            <div class="flex justify-between items-center text-xs py-1">
+                                <span class="theme-text-muted">${s.date}</span>
+                                <span class="font-semibold">${s.acc}/${s.qty} acertos (${pct}%)</span>
+                                <button onclick="removeExerciseSession('${topicKey}',${idx})" class="text-rose-400 hover:underline text-[11px]">Excluir</button>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        function renderRevisionHistory(topicKey, revisions) {
+            if (!revisions || revisions.length === 0) {
+                return `<p class="text-xs theme-text-muted italic">Nenhuma revisão registrada ainda.</p>`;
+            }
+            return `
+                <div class="space-y-1 max-h-36 overflow-y-auto pr-1 divide-y theme-border">
+                    ${revisions.map((revDate, idx) => `
+                        <div class="flex justify-between items-center text-xs py-1">
+                            <span class="font-semibold">Revisão #${idx + 1}</span>
+                            <span class="theme-text-muted">${revDate}</span>
+                            <button onclick="removeRevision('${topicKey}',${idx})" class="text-rose-400 hover:underline text-[11px]">Excluir</button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function getTopicData(topicKey) {
+            if (!appState.progress[topicKey]) {
+                appState.progress[topicKey] = {
+                    theory: false,
+                    theoryDate: '',
+                    revisions: [],
+                    exerciseSessions: [],
+                    link: '',
+                    notes: ''
+                };
+            }
+            return appState.progress[topicKey];
+        }
+
+        function saveTheoryDate(topicKey) {
+            const dateInput = document.getElementById(`theoryDate_input_${topicKey}`);
+            const dateVal = dateInput.value;
+            const todayStr = getTodayStr();
+
+            if (dateVal > todayStr) {
+                alert("Não é permitido registrar datas futuras.");
+                return;
+            }
+
+            const data = getTopicData(topicKey);
+            data.theory = true;
+            data.theoryDate = dateVal;
+            saveState();
+            renderTabContent();
+        }
+
+        function addExerciseSession(topicKey) {
+            const qtyInput = document.getElementById(`exQty_input_${topicKey}`);
+            const accInput = document.getElementById(`exAcc_input_${topicKey}`);
+            const dateInput = document.getElementById(`exDate_input_${topicKey}`);
+
+            const qty = parseInt(qtyInput.value);
+            const acc = parseInt(accInput.value);
+            const date = dateInput.value;
+            const todayStr = getTodayStr();
+
+            if (date > todayStr) {
+                alert("Não é permitido registrar datas futuras.");
+                return;
+            }
+
+            if (isNaN(qty) || isNaN(acc) || qty <= 0 || acc < 0 || acc > qty) {
+                alert("Por favor, insira valores válidos para quantidade e acertos.");
+                return;
+            }
+
+            const data = getTopicData(topicKey);
+            if (!data.exerciseSessions) data.exerciseSessions = [];
+            data.exerciseSessions.unshift({ qty, acc, date });
+
+            saveState();
+            renderTabContent();
+        }
+
+        function removeExerciseSession(topicKey, idx) {
+            const data = getTopicData(topicKey);
+            if (data.exerciseSessions) {
+                data.exerciseSessions.splice(idx, 1);
+                saveState();
+                renderTabContent();
+            }
+        }
+
+        function addRevision(topicKey) {
+            const dateInput = document.getElementById(`revDate_input_${topicKey}`);
+            const date = dateInput.value;
+            const todayStr = getTodayStr();
+
+            if (date > todayStr) {
+                alert("Não é permitido registrar datas futuras.");
+                return;
+            }
+
+            if (!date) return;
+
+            const data = getTopicData(topicKey);
+            if (!data.revisions) data.revisions = [];
+            data.revisions.unshift(date);
+
+            saveState();
+            renderTabContent();
+        }
+
+        function removeRevision(topicKey, idx) {
+            const data = getTopicData(topicKey);
+            if (data.revisions) {
+                data.revisions.splice(idx, 1);
+                saveState();
+                renderTabContent();
+            }
+        }
+
+        function saveLink(topicKey) {
+            const linkInput = document.getElementById(`link_input_${topicKey}`);
+            const data = getTopicData(topicKey);
+            data.link = linkInput.value ? linkInput.value.trim() : '';
+            saveState();
+            renderTabContent();
+        }
+
+        function updateNotes(topicKey, val) {
+            const data = getTopicData(topicKey);
+            data.notes = val;
+            saveState();
+        }
+
+        function toggleDetails(topicKey) {
+            const el = document.getElementById(`details_${topicKey}`);
+            if (el) el.classList.toggle('hidden');
+        }
+
+        function toggleSubjectAccordion(subId) {
+            const body = document.getElementById(`body_${subId}`);
+            const arrow = document.getElementById(`arrow_${subId}`);
+            if (body) body.classList.toggle('hidden');
+            if (arrow) arrow.classList.toggle('rotate-180');
+        }
+
+        function updateStats() {
+            let totalTopics = 0;
+            let completedTheory = 0;
+            let totalRevisions = 0;
+            let totalExQty = 0;
+            let totalExAcc = 0;
+            let totalSessions = 0;
+
+            ['p1', 'p2'].forEach(tab => {
+                EDITAL_DATA[tab].forEach(sub => {
+                    sub.topics.forEach((top, idx) => {
+                        totalTopics++;
+                        const key = `${sub.id}_${idx}`;
+                        const data = appState.progress[key];
+
+                        if (data) {
+                            if (data.theory) completedTheory++;
+                            if (data.revisions) totalRevisions += data.revisions.length;
+                            if (data.exerciseSessions) {
+                                totalSessions += data.exerciseSessions.length;
+                                data.exerciseSessions.forEach(s => {
+                                    totalExQty += Number(s.qty || 0);
+                                    totalExAcc += Number(s.acc || 0);
+                                });
+                            }
+                        }
+                    });
+                });
+            });
+
+            const overallPct = totalTopics > 0 ? Math.round((completedTheory / totalTopics) * 100) : 0;
+            const accPct = totalExQty > 0 ? Math.round((totalExAcc / totalExQty) * 100) : 0;
+
+            document.getElementById('statOverallPct').innerText = `${overallPct}%`;
+            document.getElementById('statOverallCount').innerText = completedTheory;
+
+            document.getElementById('statTheoryPct').innerText = `${overallPct}%`;
+            document.getElementById('statTheoryCount').innerText = completedTheory;
+
+            document.getElementById('statRevCount').innerText = totalRevisions;
+
+            document.getElementById('statExQty').innerText = totalExQty;
+            document.getElementById('statExSessions').innerText = totalSessions;
+
+            document.getElementById('statAccPct').innerText = `${accPct}%`;
+            document.getElementById('statExAcc').innerText = totalExAcc;
+        }
+
+        function exportBackup() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `SEFAZ_SC_Estudos_Backup_${getTodayStr()}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importBackup(event) {
+            const fileReader = new FileReader();
+            fileReader.onload = function(e) {
+                try {
+                    const importedState = JSON.parse(e.target.result);
+                    if (importedState && importedState.progress) {
+                        appState = importedState;
+                        saveState();
+                        applyTheme();
+                        switchTab(appState.activeTab || 'overview');
+                        alert("Backup importado com sucesso!");
+                    } else {
+                        alert("Ficheiro de backup inválido.");
+                    }
+                } catch (err) {
+                    alert("Erro ao ler o ficheiro de backup.");
+                }
+            };
+            fileReader.readAsText(event.target.files[0]);
+        }
+
+        function renderAll() {
+            switchTab(appState.activeTab || 'overview');
+            updateStats();
+        }
+
+        window.addEventListener('DOMContentLoaded', loadState);
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEFAZ/SC - Acompanhamento de Estudos (Cargo A01)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        .theme-dark {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --bg-subcard: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --input-bg: #0f172a;
+        }
+        .theme-light {
+            --bg-main: #f1f5f9;
+            --bg-card: #ffffff;
+            --bg-subcard: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --input-bg: #ffffff;
+        }
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .theme-card { background-color: var(--bg-card); border-color: var(--border-color); }
+        .theme-subcard { background-color: var(--bg-subcard); border-color: var(--border-color); }
+        .theme-text-muted { color: var(--text-muted); }
+        .theme-border { border-color: var(--border-color); }
+        .theme-input { background-color: var(--input-bg); color: var(--text-main); border-color: var(--border-color); }
+    </style>
+</head>
+<body class="theme-dark min-h-full font-sans pb-12">
+
+    <!-- Header Principal -->
+    <header class="theme-card border-b sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xl border border-emerald-500/30">
+                    ✓
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold leading-tight">SEFAZ/SC • Edital nº 01/2026</h1>
+                    <p class="text-xs theme-text-muted">Auditor Estadual de Finanças Públicas — Administração e Engenharias (Cargo A01)</p>
+                </div>
+            </div>
+
+            <!-- Botões de Ação Topo -->
+            <div class="flex flex-wrap items-center gap-2">
+                <div id="countdownBadge" class="px-3 py-1.5 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-xs font-semibold flex items-center gap-1.5">
+                    ⏳ Prova em 22/11/2026
+                </div>
+                <button onclick="toggleTheme()" class="px-3 py-1.5 rounded-xl text-xs font-semibold theme-subcard border hover:opacity-80 transition flex items-center gap-1.5">
+                    <span id="themeIcon">☀️</span> <span id="themeLabel">Modo Claro</span>
+                </button>
+                <button onclick="exportBackup()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition flex items-center gap-1">
+                    💾 Exportar
+                </button>
+                <label class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white cursor-pointer transition flex items-center gap-1">
+                    📂 Importar <input type="file" id="importFile" onchange="importBackup(event)" class="hidden" accept=".json">
+                </label>
                 <button onclick="resetData()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-500 text-white transition flex items-center gap-1">
                     🗑️ Resetar
                 </button>
