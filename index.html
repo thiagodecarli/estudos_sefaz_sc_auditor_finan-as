@@ -39,11 +39,95 @@ const subjects=tab=>tab==='p1'?P1:P2;
 const blank=()=>({theme:'dark',tab:'overview',filter:'all',progress:{},openSubjects:{},openTopics:{}});
 let state=blank();
 function normalize(raw){let s=blank();if(raw&&typeof raw==='object'){s={...s,...raw};s.theme=raw.theme==='light'?'light':'dark';s.tab=['overview','p1','p2'].includes(raw.tab||raw.activeTab)?(raw.tab||raw.activeTab):'overview';s.progress=raw.progress||{};s.openSubjects=raw.openSubjects||{};s.openTopics=raw.openTopics||{};if(raw.done)Object.keys(raw.done).forEach(k=>{let d=s.progress[k]||{};s.progress[k]={...d,theory:!!raw.done[k]}})}return s}
-async function load(){try{state=normalize(JSON.parse(localStorage.getItem(KEY)||localStorage.getItem('sefaz_sc_study_app_v2')||'null'))}catch(e){state=blank()}document.body.className=state.theme;render();const {data:{session}}=await supabaseClient.auth.getSession();supabaseUser=session?.user||null;if(supabaseUser){const {data,error}=await supabaseClient.from('user_study_state').select('state').eq('user_id',supabaseUser.id).maybeSingle();if(error)console.error('Erro ao carregar progresso na nuvem:',error);else if(data?.state){state=normalize(data.state);localStorage.setItem(KEY,JSON.stringify(state));document.body.className=state.theme;render()}else await syncRemote() }render()}
-function save(){localStorage.setItem(KEY,JSON.stringify(state));syncRemote()}
-async function syncRemote(){if(!supabaseUser)return;const {error}=await supabaseClient.from('user_study_state').upsert({user_id:supabaseUser.id,state,updated_at:new Date().toISOString()});if(error)console.error('Erro ao sincronizar progresso:',error)}
-async function login(){let email=document.getElementById('authEmail')?.value.trim(),password=document.getElementById('authPassword')?.value;if(!email||!password)return alert('Informe e-mail e senha.');const {error}=await supabaseClient.auth.signInWithPassword({email,password});if(error)return alert('Não foi possível entrar: '+error.message);await load()}
-async function logout(){await supabaseClient.auth.signOut();supabaseUser=null;load()}
+function userStorageKey() {
+  return `${KEY}_${supabaseUser.id}`;
+}
+
+async function load() {
+  const {
+    data: { session }
+  } = await supabaseClient.auth.getSession();
+
+  supabaseUser = session?.user || null;
+
+  if (!supabaseUser) {
+    state = blank();
+    document.body.className = state.theme;
+    render();
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from('user_study_state')
+    .select('state')
+    .eq('user_id', supabaseUser.id)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Erro ao carregar progresso na nuvem:', error);
+    state = blank();
+  } else if (data?.state) {
+    state = normalize(data.state);
+    localStorage.setItem(
+      userStorageKey(),
+      JSON.stringify(state)
+    );
+  } else {
+    state = blank();
+    localStorage.setItem(
+      userStorageKey(),
+      JSON.stringify(state)
+    );
+    await syncRemote();
+  }
+
+  document.body.className = state.theme;
+  render();
+}
+
+function save() {
+  if (!supabaseUser) {
+    state = blank();
+    return;
+  }
+
+  localStorage.setItem(
+    userStorageKey(),
+    JSON.stringify(state)
+  );
+
+  syncRemote();
+}
+
+async function syncRemote() {
+  if (!supabaseUser) return;
+
+  const { error } = await supabaseClient
+    .from('user_study_state')
+    .upsert(
+      {
+        user_id: supabaseUser.id,
+        state,
+        updated_at: new Date().toISOString()
+      },
+      {
+        onConflict: 'user_id'
+      }
+    );
+
+  if (error) {
+    console.error('Erro ao sincronizar progresso:', error);
+  }
+}
+
+async function logout() {
+  await supabaseClient.auth.signOut();
+
+  supabaseUser = null;
+  state = blank();
+  document.body.className = state.theme;
+  render();
+}
 function today(){return new Date().toISOString().slice(0,10)}
 function data(k){if(!state.progress[k])state.progress[k]={theory:false,theoryDate:'',revisions:[],exerciseSessions:[],link:'',notes:''};let d=state.progress[k];d.revisions=Array.isArray(d.revisions)?d.revisions:[];d.exerciseSessions=Array.isArray(d.exerciseSessions)?d.exerciseSessions:[];return d}
 function allTopics(){return [...P1,...P2].reduce((n,s)=>n+s[1].length,0)}
