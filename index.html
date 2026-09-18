@@ -4,925 +4,703 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SEFAZ/SC - Acompanhamento de Estudos (Cargo A01)</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
+                    fontFamily: { sans: ['Inter', 'sans-serif'] }
                 }
             }
         }
     </script>
     <style>
-        /* VARIÁVEIS DE TEMA (DARK / LIGHT) */
-        :root {
+        .theme-dark {
             --bg-main: #0f172a;
-            --bg-header: rgba(30, 41, 59, 0.8);
             --bg-card: #1e293b;
-            --bg-subcard: #0f172a;
-            --border-color: #334155;
+            --bg-subcard: #334155;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --btn-panorama: #4f46e5;
-            --color-positive: #10b981;
-            --color-indicator: #f59e0b;
-            --color-ce: #06b6d4;
+            --border-color: #475569;
             --input-bg: #0f172a;
         }
-
-        body.light-theme {
-            --bg-main: #F4F6FA;
-            --bg-header: rgba(255, 255, 255, 0.9);
-            --bg-card: #FFFFFF;
-            --bg-subcard: #F8FAFC;
-            --border-color: #DDE3EC;
-            --text-main: #25324A;
-            --text-muted: #68758A;
-            --btn-panorama: #5965D8;
-            --color-positive: #20A77A;
-            --color-indicator: #D89B27;
-            --color-ce: #238FA5;
-            --input-bg: #FFFFFF;
+        .theme-light {
+            --bg-main: #f1f5f9;
+            --bg-card: #ffffff;
+            --bg-subcard: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --input-bg: #ffffff;
         }
-
         body {
             background-color: var(--bg-main);
             color: var(--text-main);
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.3s, color 0.3s;
         }
-
-        .theme-header { background-color: var(--bg-header); border-color: var(--border-color); }
-        .theme-card { background-color: var(--bg-card); border-color: var(--border-color); color: var(--text-main); }
+        .theme-card { background-color: var(--bg-card); border-color: var(--border-color); }
         .theme-subcard { background-color: var(--bg-subcard); border-color: var(--border-color); }
-        .theme-border { border-color: var(--border-color); }
-        .theme-text-main { color: var(--text-main); }
         .theme-text-muted { color: var(--text-muted); }
-        .theme-input { background-color: var(--input-bg); border-color: var(--border-color); color: var(--text-main); }
-
-        .text-positive { color: var(--color-positive); }
-        .bg-positive { background-color: var(--color-positive); }
-        .text-indicator { color: var(--color-indicator); }
-        .bg-indicator { background-color: var(--color-indicator); }
-        .text-ce { color: var(--color-ce); }
-        .bg-ce { background-color: var(--color-ce); }
-        .bg-btn-panorama { background-color: var(--btn-panorama); }
-
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-main); }
-        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        .theme-border { border-color: var(--border-color); }
+        .theme-input { background-color: var(--input-bg); color: var(--text-main); border-color: var(--border-color); }
     </style>
 </head>
-<body class="h-full flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
+<body class="theme-dark min-h-full font-sans pb-12">
 
-    <!-- HEADER PRINCIPAL -->
-    <header class="theme-header backdrop-blur border-b sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+    <!-- Header Principal -->
+    <header class="theme-card border-b sticky top-0 z-50 backdrop-blur-md bg-opacity-90">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="flex items-center space-x-3">
-                <div class="p-2 bg-indigo-500/10 border theme-border rounded-xl text-positive">
-                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xl border border-emerald-500/30">
+                    ✓
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold tracking-tight">SEFAZ/SC • Edital nº 01/2026</h1>
-                    <p class="text-xs theme-text-muted font-medium">Auditor Estadual de Finanças Públicas — <span class="font-semibold text-ce">Administração e Engenharias (Cargo A01)</span></p>
+                    <h1 class="text-lg font-bold leading-tight">SEFAZ/SC • Edital nº 01/2026</h1>
+                    <p class="text-xs theme-text-muted">Auditor Estadual de Finanças Públicas — Administração e Engenharias (Cargo A01)</p>
                 </div>
             </div>
 
-            <!-- BOTÕES DE TEMA, BACKUP E RESET -->
-            <div class="flex flex-wrap items-center gap-2 text-xs">
-                <!-- Toggle Modo Claro / Escuro -->
-                <button onclick="toggleTheme()" class="px-3 py-1.5 theme-card border rounded-lg flex items-center space-x-1.5 transition hover:opacity-80">
-                    <span id="themeIcon">🌙</span>
-                    <span id="themeLabel" class="font-medium">Modo Escuro</span>
+            <!-- Botões de Ação Topo -->
+            <div class="flex flex-wrap items-center gap-2">
+                <div id="countdownBadge" class="px-3 py-1.5 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-xs font-semibold flex items-center gap-1.5">
+                    ⏳ Prova em 22/11/2026
+                </div>
+                <button onclick="toggleTheme()" class="px-3 py-1.5 rounded-xl text-xs font-semibold theme-subcard border hover:opacity-80 transition flex items-center gap-1.5">
+                    <span id="themeIcon">☀️</span> <span id="themeLabel">Modo Claro</span>
                 </button>
-
-                <button onclick="exportBackup()" class="px-3 py-1.5 theme-card border rounded-lg flex items-center space-x-1.5 transition hover:opacity-80">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                    <span>Exportar</span>
+                <button onclick="exportBackup()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition flex items-center gap-1">
+                    💾 Exportar
                 </button>
-                <label class="px-3 py-1.5 theme-card border rounded-lg flex items-center space-x-1.5 cursor-pointer transition hover:opacity-80">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                    <span>Importar</span>
-                    <input type="file" id="importFileInput" onchange="importBackup(event)" class="hidden" accept=".json">
+                <label class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white cursor-pointer transition flex items-center gap-1">
+                    📂 Importar <input type="file" id="importFile" onchange="importBackup(event)" class="hidden" accept=".json">
                 </label>
-                <button onclick="resetProgress()" class="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/30 rounded-lg flex items-center space-x-1.5 transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    <span>Resetar</span>
+                <button onclick="resetData()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-500 text-white transition flex items-center gap-1">
+                    🗑️ Resetar
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- PAINEL DE ESTATÍSTICAS / DASHBOARD -->
-    <section class="py-4 border-b theme-border">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
-                <!-- Progresso Geral -->
-                <div class="theme-card border rounded-xl p-3 flex flex-col justify-between col-span-2 md:col-span-1 shadow-sm">
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-xs font-semibold theme-text-muted uppercase tracking-wider">Progresso Edital</span>
-                        <span id="dashProgGeralPct" class="text-xs font-bold text-positive">0%</span>
-                    </div>
-                    <div class="text-xl font-extrabold mb-2" id="dashProgGeralText">0 / 0</div>
-                    <div class="w-full theme-subcard rounded-full h-2 overflow-hidden border theme-border">
-                        <div id="dashProgGeralBar" class="bg-positive h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
-                    </div>
-                </div>
+    <main class="max-w-7xl mx-auto px-4 mt-6 space-y-6">
 
-                <!-- Teoria 1ª Vez -->
-                <div class="theme-card border rounded-xl p-3 flex flex-col justify-between shadow-sm">
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-xs font-semibold theme-text-muted uppercase tracking-wider">Teoria Vistas</span>
-                        <span id="dashTeoriaPct" class="text-xs font-bold text-positive">0%</span>
-                    </div>
-                    <div class="text-xl font-extrabold mb-2" id="dashTeoriaText">0 / 0</div>
-                    <div class="w-full theme-subcard rounded-full h-2 overflow-hidden border theme-border">
-                        <div id="dashTeoriaBar" class="bg-positive h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
-                    </div>
-                </div>
+        <!-- Cards de Estatísticas -->
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+            <div class="theme-card p-4 rounded-2xl border">
+                <span class="text-[11px] font-bold uppercase tracking-wider theme-text-muted">Progresso Geral</span>
+                <div class="text-2xl font-extrabold mt-1 text-emerald-400" id="statOverallPct">0%</div>
+                <div class="text-xs theme-text-muted mt-1"><span id="statOverallCount">0</span> tópicos concluídos</div>
+            </div>
 
-                <!-- Revisões (R1, R2, R3) -->
-                <div class="theme-card border rounded-xl p-3 flex flex-col justify-between shadow-sm">
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-xs font-semibold theme-text-muted uppercase tracking-wider">Revisões Feitas</span>
-                        <span id="dashRevPct" class="text-xs font-bold text-indicator">0%</span>
-                    </div>
-                    <div class="text-xl font-extrabold mb-2" id="dashRevText">0 / 0</div>
-                    <div class="w-full theme-subcard rounded-full h-2 overflow-hidden border theme-border">
-                        <div id="dashRevBar" class="bg-indicator h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
-                    </div>
-                </div>
+            <div class="theme-card p-4 rounded-2xl border">
+                <span class="text-[11px] font-bold uppercase tracking-wider theme-text-muted">Teoria Vista</span>
+                <div class="text-2xl font-extrabold mt-1 text-blue-400" id="statTheoryPct">0%</div>
+                <div class="text-xs theme-text-muted mt-1"><span id="statTheoryCount">0</span> concluidos</div>
+            </div>
 
-                <!-- Exercícios Realizados -->
-                <div class="theme-card border rounded-xl p-3 flex flex-col justify-between shadow-sm">
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-xs font-semibold theme-text-muted uppercase tracking-wider">Tópicos c/ Treino</span>
-                        <span id="dashExPct" class="text-xs font-bold text-ce">0%</span>
-                    </div>
-                    <div class="text-xl font-extrabold mb-2" id="dashExText">0 / 0</div>
-                    <div class="w-full theme-subcard rounded-full h-2 overflow-hidden border theme-border">
-                        <div id="dashExBar" class="bg-ce h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
-                    </div>
-                </div>
+            <div class="theme-card p-4 rounded-2xl border">
+                <span class="text-[11px] font-bold uppercase tracking-wider theme-text-muted">Revisões Feitas</span>
+                <div class="text-2xl font-extrabold mt-1 text-purple-400" id="statRevCount">0</div>
+                <div class="text-xs theme-text-muted mt-1">Registros de revisão</div>
+            </div>
 
-                <!-- Métricas de Questões -->
-                <div class="theme-card border rounded-xl p-3 flex flex-col justify-between shadow-sm">
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-xs font-semibold theme-text-muted uppercase tracking-wider">Taxa de Acertos</span>
-                        <span id="dashAccPct" class="text-xs font-bold text-positive">0%</span>
-                    </div>
-                    <div class="text-lg font-bold mb-1" id="dashQuestText">0 resolvidos</div>
-                    <div class="text-xs theme-text-muted" id="dashAcertosText">0 acertos</div>
-                </div>
+            <div class="theme-card p-4 rounded-2xl border">
+                <span class="text-[11px] font-bold uppercase tracking-wider theme-text-muted">Questões Feitas</span>
+                <div class="text-2xl font-extrabold mt-1 text-amber-400" id="statExQty">0</div>
+                <div class="text-xs theme-text-muted mt-1"><span id="statExSessions">0</span> sessões de treino</div>
+            </div>
+
+            <div class="theme-card p-4 rounded-2xl border col-span-2 md:col-span-1">
+                <span class="text-[11px] font-bold uppercase tracking-wider theme-text-muted">Taxa de Acertos</span>
+                <div class="text-2xl font-extrabold mt-1 text-emerald-400" id="statAccPct">0%</div>
+                <div class="text-xs theme-text-muted mt-1"><span id="statExAcc">0</span> acertos totais</div>
             </div>
         </div>
-    </section>
 
-    <!-- NAVEGAÇÃO DE ABAS -->
-    <div class="border-b theme-border">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <nav class="flex space-x-2 sm:space-x-8 overflow-x-auto py-2" aria-label="Tabs">
-                <button onclick="switchTab('tab-panorama')" id="btn-tab-panorama" class="tab-btn px-4 py-2.5 rounded-lg font-medium text-sm whitespace-nowrap transition-all flex items-center space-x-2 bg-btn-panorama text-white shadow-md">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <span>Panorama do Edital</span>
-                </button>
-                <button onclick="switchTab('tab-cg')" id="btn-tab-cg" class="tab-btn px-4 py-2.5 rounded-lg font-medium text-sm whitespace-nowrap transition-all flex items-center space-x-2 theme-text-muted hover:opacity-100">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                    <span>Conhecimentos Gerais (P1)</span>
-                </button>
-                <button onclick="switchTab('tab-ce')" id="btn-tab-ce" class="tab-btn px-4 py-2.5 rounded-lg font-medium text-sm whitespace-nowrap transition-all flex items-center space-x-2 theme-text-muted hover:opacity-100">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                    <span>Conhecimentos Específicos (P2)</span>
-                </button>
-            </nav>
+        <!-- Navegação por Abas -->
+        <div class="flex border-b theme-border space-x-2">
+            <button onclick="switchTab('p1')" id="tabBtnP1" class="px-5 py-3 font-semibold text-sm border-b-2 border-emerald-400 text-emerald-400">
+                Conhecimentos Gerais (P1)
+            </button>
+            <button onclick="switchTab('p2')" id="tabBtnP2" class="px-5 py-3 font-semibold text-sm border-b-2 border-transparent theme-text-muted hover:text-white">
+                Conhecimentos Específicos (P2 - Peso 2)
+            </button>
         </div>
-    </div>
 
-    <!-- CONTEÚDO PRINCIPAL -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-
-        <!-- ABA 1: PANORAMA -->
-        <section id="tab-panorama" class="tab-content space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Cargo -->
-                <div class="theme-card border rounded-2xl p-5 space-y-3 shadow-sm">
-                    <div class="flex items-center space-x-3 text-ce">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                        <h3 class="font-bold text-lg">Cargo e Vagas</h3>
-                    </div>
-                    <ul class="text-sm space-y-2 theme-text-muted">
-                        <li class="flex justify-between border-b theme-border pb-1.5"><span>Cargo:</span> <strong class="theme-text-main">Auditor Est. Finanças Públicas</strong></li>
-                        <li class="flex justify-between border-b theme-border pb-1.5"><span>Área:</span> <strong class="text-ce font-semibold">Administração e Engenharias (A01)</strong></li>
-                        <li class="flex justify-between border-b theme-border pb-1.5"><span>Remuneração Inicial:</span> <strong class="text-positive font-bold">R$ 25.337,61</strong></li>
-                        <li class="flex justify-between border-b theme-border pb-1.5"><span>Carga Horária:</span> <strong class="theme-text-main">40 horas semanais</strong></li>
-                        <li class="flex justify-between border-b theme-border pb-1.5"><span>Vagas Ampla:</span> <strong class="theme-text-main">5 vagas</strong></li>
-                        <li class="flex justify-between pb-1"><span>Vagas PcD:</span> <strong class="theme-text-main">1 vaga (Total: 6)</strong></li>
-                    </ul>
-                </div>
-
-                <!-- Inscrições -->
-                <div class="theme-card border rounded-2xl p-5 space-y-3 shadow-sm">
-                    <div class="flex items-center space-x-3 text-positive">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        <h3 class="font-bold text-lg">Inscrições e Datas</h3>
-                    </div>
-                    <ul class="text-sm space-y-2 theme-text-muted">
-                        <li class="flex justify-between border-b theme-border pb-1.5"><span>Inscrições:</span> <strong class="theme-text-main">04/09 a 05/10/2026</strong></li>
-                        <li class="flex justify-between border-b theme-border pb-1.5"><span>Taxa:</span> <strong class="text-indicator font-bold">R$ 200,00 (DARE)</strong></li>
-                        <li class="flex justify-between border-b theme-border pb-1.5"><span>Pagamento DARE:</span> <strong class="theme-text-main">Até 06/10/2026</strong></li>
-                        <li class="flex justify-between border-b theme-border pb-1.5"><span>Isenção:</span> <strong class="theme-text-main">04/09 a 08/09/2026</strong></li>
-                        <li class="flex justify-between border-b theme-border pb-1.5"><span>Data das Provas:</span> <strong class="text-positive font-bold">22/11/2026</strong></li>
-                        <li class="flex justify-between pb-1"><span>Banca:</span> <strong class="theme-text-main">FCC</strong></li>
-                    </ul>
-                </div>
-
-                <!-- Aplicação -->
-                <div class="theme-card border rounded-2xl p-5 space-y-3 shadow-sm">
-                    <div class="flex items-center space-x-3 text-indicator">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <h3 class="font-bold text-lg">Aplicação das Provas</h3>
-                    </div>
-                    <ul class="text-sm space-y-2 theme-text-muted">
-                        <li class="flex justify-between border-b theme-border pb-1.5"><span>Local:</span> <strong class="theme-text-main">Florianópolis/SC</strong></li>
-                        <li class="flex justify-between border-b theme-border pb-1.5"><span>Manhã (P1):</span> <strong class="theme-text-main">Conhecimentos Gerais (4h)</strong></li>
-                        <li class="flex justify-between border-b theme-border pb-1.5"><span>Tarde (P2):</span> <strong class="theme-text-main">Conhecimentos Específicos (5h)</strong></li>
-                        <li class="flex justify-between border-b theme-border pb-1.5"><span>Permanência Mínima:</span> <strong class="theme-text-main">3 horas de prova</strong></li>
-                        <li class="flex justify-between pb-1"><span>Formato:</span> <strong class="theme-text-main">Objetiva (A a E)</strong></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Tabela Estrutura -->
-            <div class="theme-card border rounded-2xl p-6 space-y-4 shadow-sm">
-                <h3 class="font-bold text-lg flex items-center space-x-2">
-                    <svg class="w-5 h-5 text-ce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    <span>Estrutura das Provas Objetivas e Pesos</span>
-                </h3>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm text-left border-collapse">
-                        <thead class="text-xs uppercase theme-subcard theme-text-muted border-b theme-border">
-                            <tr>
-                                <th class="py-3 px-4">Prova</th>
-                                <th class="py-3 px-4">Disciplinas</th>
-                                <th class="py-3 px-4 text-center">Questões</th>
-                                <th class="py-3 px-4 text-center">Peso</th>
-                                <th class="py-3 px-4 text-center">Duração</th>
-                                <th class="py-3 px-4 text-center">Turno</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y theme-border">
-                            <tr>
-                                <td class="py-3 px-4 font-semibold text-indicator">PROVA 1</td>
-                                <td class="py-3 px-4">Conhecimentos Gerais (Português, RLM/Est/MatFin, D. Const, D. Admin, Ciên. Dados, Ética, Hist/Geog SC)</td>
-                                <td class="py-3 px-4 text-center font-bold">80</td>
-                                <td class="py-3 px-4 text-center font-bold text-indicator">1</td>
-                                <td class="py-3 px-4 text-center">4 horas</td>
-                                <td class="py-3 px-4 text-center"><span class="px-2 py-1 bg-amber-500/10 text-indicator rounded text-xs font-semibold">Manhã</span></td>
-                            </tr>
-                            <tr>
-                                <td class="py-3 px-4 font-semibold text-ce">PROVA 2</td>
-                                <td class="py-3 px-4">Conhecimentos Específicos (Ciclo Orçamentário, LRF, Gestão de Riscos, Custos, Admin Geral e Estratégica)</td>
-                                <td class="py-3 px-4 text-center font-bold">100</td>
-                                <td class="py-3 px-4 text-center font-bold text-positive">2</td>
-                                <td class="py-3 px-4 text-center">5 horas</td>
-                                <td class="py-3 px-4 text-center"><span class="px-2 py-1 bg-cyan-500/10 text-ce rounded text-xs font-semibold">Tarde</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Cálculo FCC -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                    <div class="theme-subcard border p-4 rounded-xl space-y-2">
-                        <h4 class="font-semibold text-xs text-indicator uppercase tracking-wider">Fórmula da Nota Padronizada (FCC)</h4>
-                        <div class="theme-card p-2.5 rounded font-mono text-center text-xs text-positive border">
-                            NP = [((A - X) / σ) × 10] + 50
-                        </div>
-                        <p class="text-[11px] theme-text-muted">
-                            <em>A</em> = acertos do candidato, <em>X</em> = média do grupo e <em>σ</em> = desvio padrão.
-                        </p>
-                    </div>
-
-                    <div class="theme-subcard border p-4 rounded-xl space-y-2">
-                        <h4 class="font-semibold text-xs text-rose-500 uppercase tracking-wider">Critério Mínimo de Aprovação</h4>
-                        <div class="text-2xl font-black text-rose-500">NP Total ≥ 150,00</div>
-                        <p class="text-xs theme-text-muted">
-                            Habilitado o candidato com somatório das notas padronizadas das Provas 1 e 2 <strong>igual ou superior a 150 pontos</strong>.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ABA 2: CONHECIMENTOS GERAIS -->
-        <section id="tab-cg" class="tab-content hidden space-y-6">
-            <div class="theme-card border p-4 rounded-2xl flex flex-col md:flex-row gap-4 justify-between items-center shadow-sm">
-                <div class="relative w-full md:w-96">
-                    <input type="text" id="searchCG" oninput="filterTopics('cg')" placeholder="Buscar tópicos por palavra-chave..." class="w-full theme-input border text-sm rounded-xl pl-10 pr-4 py-2 focus:outline-none">
-                    <svg class="w-4 h-4 theme-text-muted absolute left-3.5 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </div>
-                <div class="flex items-center space-x-2 w-full md:w-auto overflow-x-auto">
-                    <span class="text-xs theme-text-muted font-medium">Filtrar:</span>
-                    <button onclick="setStatusFilter('cg', 'all')" id="btnFilter-cg-all" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-btn-panorama text-white">Todos</button>
-                    <button onclick="setStatusFilter('cg', 'pending')" id="btnFilter-cg-pending" class="px-3 py-1.5 rounded-lg text-xs font-semibold theme-subcard border theme-text-muted">Pendente de Revisão</button>
-                    <button onclick="setStatusFilter('cg', 'unstudied')" id="btnFilter-cg-unstudied" class="px-3 py-1.5 rounded-lg text-xs font-semibold theme-subcard border theme-text-muted">Não Estudados</button>
-                    <button onclick="setStatusFilter('cg', 'done')" id="btnFilter-cg-done" class="px-3 py-1.5 rounded-lg text-xs font-semibold theme-subcard border theme-text-muted">Concluídos</button>
-                </div>
-            </div>
-
-            <div id="container-cg" class="space-y-4"></div>
-        </section>
-
-        <!-- ABA 3: CONHECIMENTOS ESPECÍFICOS -->
-        <section id="tab-ce" class="tab-content hidden space-y-6">
-            <div class="theme-card border p-4 rounded-2xl flex flex-col md:flex-row gap-4 justify-between items-center shadow-sm">
-                <div class="relative w-full md:w-96">
-                    <input type="text" id="searchCE" oninput="filterTopics('ce')" placeholder="Buscar tópicos por palavra-chave..." class="w-full theme-input border text-sm rounded-xl pl-10 pr-4 py-2 focus:outline-none">
-                    <svg class="w-4 h-4 theme-text-muted absolute left-3.5 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                </div>
-                <div class="flex items-center space-x-2 w-full md:w-auto overflow-x-auto">
-                    <span class="text-xs theme-text-muted font-medium">Filtrar:</span>
-                    <button onclick="setStatusFilter('ce', 'all')" id="btnFilter-ce-all" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-btn-panorama text-white">Todos</button>
-                    <button onclick="setStatusFilter('ce', 'pending')" id="btnFilter-ce-pending" class="px-3 py-1.5 rounded-lg text-xs font-semibold theme-subcard border theme-text-muted">Pendente de Revisão</button>
-                    <button onclick="setStatusFilter('ce', 'unstudied')" id="btnFilter-ce-unstudied" class="px-3 py-1.5 rounded-lg text-xs font-semibold theme-subcard border theme-text-muted">Não Estudados</button>
-                    <button onclick="setStatusFilter('ce', 'done')" id="btnFilter-ce-done" class="px-3 py-1.5 rounded-lg text-xs font-semibold theme-subcard border theme-text-muted">Concluídos</button>
-                </div>
-            </div>
-
-            <div id="container-ce" class="space-y-4"></div>
-        </section>
+        <!-- Lista de Disciplinas -->
+        <div id="subjectList" class="space-y-4"></div>
 
     </main>
 
-    <!-- FOOTER -->
-    <footer class="border-t theme-border py-4 text-center text-xs theme-text-muted">
-        SEFAZ/SC • Edital nº 01/2026 — Roteiro de Acompanhamento Interativo de Estudos (Cargo A01)
-    </footer>
-
-    <!-- LÓGICA E DADOS DA APLICAÇÃO -->
     <script>
-        const SYLLABUS = {
-            cg: [
+        // Data da prova
+        const EXAM_DATE = new Date("2026-11-22T00:00:00");
+
+        // Estrutura do Edital SEFAZ/SC Cargo A01
+        const EDITAL_DATA = {
+            p1: [
                 {
-                    id: 'portugues',
-                    title: 'Língua Portuguesa',
+                    id: "p1_portugues",
+                    title: "Língua Portuguesa",
                     topics: [
-                        'Redação Oficial.',
-                        'Ortografia e acentuação.',
-                        'Emprego do sinal indicativo de crase.',
-                        'Compreensão e interpretação de textos de gêneros variados.',
-                        'Relação do texto com seu contexto histórico.',
-                        'Denotação e conotação.',
-                        'Discurso direto, discurso indireto e discurso indireto livre.',
-                        'Intertextualidade.',
-                        'Figuras de linguagem.',
-                        'Morfossintaxe.',
-                        'Elementos estruturais e processos de formação de palavras.',
-                        'Sinonímia e antonímia.',
-                        'Pontuação.',
-                        'Pronomes.',
-                        'Concordância nominal e concordância verbal.',
-                        'Flexão nominal e flexão verbal.',
-                        'Vozes do verbo.',
-                        'Correlação de tempos e modos verbais.',
-                        'Regência nominal e regência verbal.',
-                        'Coordenação e subordinação.',
-                        'Conectivos.',
-                        'Redação (confronto e reconhecimento de frases corretas e incorretas; organização e reorganização de orações e períodos; equivalência e transformação de estruturas).'
+                        "Compreensão e interpretação de textos de gêneros variados",
+                        "Reconhecimento de tipos e gêneros textuais",
+                        "Domínio da estrutura morfossintática do período",
+                        "Emprego dos tempos e modos verbais",
+                        "Domínio dos mecanismos de coesão textual",
+                        "Concordância verbal e nominal",
+                        "Regência verbal e nominal",
+                        "Emprego do sinal indicativo de crase",
+                        "Pontuação e sintaxe da oração e do período"
                     ]
                 },
                 {
-                    id: 'mat_fin_estat_rl',
-                    title: 'Matemática Financeira, Estatística e Raciocínio Lógico',
+                    id: "p1_rlm_est",
+                    title: "Raciocínio Lógico-Matemático, Estatística e Matemática Financeira",
                     topics: [
-                        'Matemática Financeira: Juros simples. Montante e juros. Taxa real e taxa efetiva. Taxas equivalentes. Capitais equivalentes.',
-                        'Matemática Financeira: Juros compostos. Montante e juros. Taxa real e taxa efetiva. Taxas equivalentes. Capitais equivalentes. Capitalização contínua.',
-                        'Matemática Financeira: Descontos: simples, composto. Desconto racional e desconto comercial.',
-                        'Matemática Financeira: Amortizações. Sistema francês. Sistema de amortização constante. Sistema misto.',
-                        'Matemática Financeira: Fluxo de caixa. Valor atual. Taxa interna de retorno.',
-                        'Estatística Descritiva: gráficos, tabelas, medidas de posição (média, moda, mediana, quartis, mínimo e máximo) e de variabilidade (variância, desvio-padrão, amplitude).',
-                        'Técnicas de Contagem e Análise Combinatória: Combinações Simples, Arranjos e Permutação com e sem repetição.',
-                        'Probabilidades: conceito, espaço amostral, axiomas e distribuições de probabilidades discretas e contínuas (Bernoulli, binomial, geométrica, uniforme, discreta, contínua, normal, Poisson, qui-quadrado, t de Student e F-Snedecor).',
-                        'Inferência estatística. Amostragem: amostras casuais e não casuais. Processos de amostragem, incluindo estimativa pontual de parâmetros. Intervalos de confiança. Testes de hipóteses para médias e proporções. Correlação e regressão linear simples.',
-                        'Raciocínio Lógico: Estrutura lógica de relações arbitrárias entre pessoas, lugares, objetos ou eventos fictícios; dedução de novas informações das relações fornecidas e avaliação das condições usadas para estabelecer a estrutura daquelas relações.',
-                        'Raciocínio Lógico: Compreensão e elaboração da lógica das situações por meio de: raciocínio verbal; raciocínio matemático; raciocínio sequencial; orientação espacial e temporal; formação de conceitos; discriminação de elementos.',
-                        'Raciocínio Lógico: Compreensão do processo lógico que, a partir de um conjunto de hipóteses, conduz, de forma válida, a conclusões determinadas.'
+                        "Lógica proposicional e de argumentação",
+                        "Operações com conjuntos e combinatória",
+                        "Probabilidade básica e condicional",
+                        "Estatística Descritiva: médias, mediana, moda e variância",
+                        "Juros Simples e Compostos",
+                        "Taxas nominais, efetivas e equivalentes",
+                        "Sistemas de Amortização (PRICE e SAC)",
+                        "Valor Presente Líquido (VPL) e Taxa Interna de Retorno (TIR)"
                     ]
                 },
                 {
-                    id: 'direito_const',
-                    title: 'Noções de Direito Constitucional',
+                    id: "p1_direito_const",
+                    title: "Direito Constitucional",
                     topics: [
-                        'Constituição da República Federativa do Brasil de 1988. Princípios fundamentais.',
-                        'Direitos e garantias fundamentais: Direitos e deveres individuais e coletivos, direitos sociais, nacionalidade, direitos políticos.',
-                        'Organização político-administrativa do Estado: Estado federal brasileiro, União, estados, Distrito Federal, municípios e territórios.',
-                        'Administração pública: Disposições gerais, servidores públicos.',
-                        'Poder Executivo: atribuições do Presidente da República.',
-                        'Poder Legislativo: estrutura; funcionamento e atribuições; fiscalização contábil, financeira e orçamentária.',
-                        'Finanças Públicas na CF/88.',
-                        'Ordem econômica e financeira: Princípios gerais da atividade econômica.',
-                        'Ordem social: Seguridade social; Mínimos constitucionais federais e estaduais; disposições gerais.',
-                        'Constituição do Estado de Santa Catarina.'
+                        "Principios Fundamentais da CF/88",
+                        "Direitos e Garantias Fundamentais",
+                        "Organização Político-Administrativa do Estado",
+                        "Administração Pública (Arts. 37 a 41)",
+                        "Poder Executivo e Poder Legislativo",
+                        "Sistema Tributário Nacional na CF/88",
+                        "Finanças Públicas e Orçamento na CF/88"
                     ]
                 },
                 {
-                    id: 'direito_admin',
-                    title: 'Noções de Direito Administrativo',
+                    id: "p1_direito_admin",
+                    title: "Direito Administrativo",
                     topics: [
-                        'Poderes da Administração Pública.',
-                        'Responsabilidade Civil do Estado.',
-                        'Controle da Administração Pública.',
-                        'Lei Complementar Estadual nº 741/2019 (Estrutura organizacional do Estado de Santa Catarina).',
-                        'Lei Estadual nº 6.745/1985 (Estatuto do servidor público do Estado de Santa Catarina).',
-                        'Lei Federal nº 12.527/2011 (Lei de Acesso à Informação - LAI).',
-                        'Lei Federal nº 8.429/1992 e alterações (Lei de Improbidade Administrativa).',
-                        'Lei Federal nº 14.133/2021 (Nova Lei de Licitações e Contratos Administrativos).'
+                        "Estado, Governo e Administração Pública",
+                        "Atos Administrativos: conceitos, atributos e anulação",
+                        "Agentes Públicos e Regime Jurídico",
+                        "Poderes da Administração Pública",
+                        "Licitações e Contratos Administrativos (Lei nº 14.133/2021)",
+                        "Serviços Públicos e Concessões",
+                        "Improbidade Administrativa (Lei nº 8.429/1992)",
+                        "Responsabilidade Civil do Estado"
                     ]
                 },
                 {
-                    id: 'ciencia_dados',
-                    title: 'Ciência e Análise de Dados',
+                    id: "p1_ciencia_dados",
+                    title: "Ciência de Dados e Tecnologia da Informação",
                     topics: [
-                        'Conceitos fundamentais de Ciência de Dados e Análise de Dados aplicados à Administração Pública, controle e finanças.',
-                        'Dados estruturados, semiestruturados e não estruturados. Coleta, qualidade, tratamento, análise e interpretação de dados. Identificação de padrões, tendências, correlações e anomalias.',
-                        'Business Intelligence e Visualização de Dados: Conceitos de BI, analytics, data mining e web scraping.',
-                        'Indicadores, métricas, relatórios gerenciais, dashboards e visualização de dados. Uso de ferramentas analíticas para extração, cruzamento, interpretação e comunicação de informações.',
-                        'Governo Digital e Inteligência Artificial: Governo Digital, transformação digital, serviços públicos digitais, interoperabilidade, automação e Administração Pública orientada por dados.',
-                        'Conceitos fundamentais de Inteligência Artificial, aprendizado de máquina, IA generativa e modelos de linguagem de grande porte (LLMs).',
-                        'Proteção de Dados Pessoais: Lei nº 13.709/2018 (LGPD) e alterações posteriores. Princípios, conceitos, bases legais, direitos dos titulares, agentes de tratamento e tratamento de dados pelo Poder Público. Compartilhamento, segurança, boas práticas e incidentes envolvendo dados pessoais.'
-                    ]
-                },
-                {
-                    id: 'etica_integridade',
-                    title: 'Ética, Integridade e Prevenção ao Assédio e Discriminação',
-                    topics: [
-                        'Ética no setor público: princípios, deveres e vedações institucionais.',
-                        'Programas de integridade e compliance na administração pública: gestão de riscos de fraude e corrupção.',
-                        'Prevenção e combate ao assédio moral, assédio sexual e a todas as formas de discriminação (gênero, raça, orientação sexual, idade e PCD) no ambiente de trabalho e nas políticas públicas.',
-                        'Lei Federal nº 12.846/2013 (Lei Anticorrupção).'
-                    ]
-                },
-                {
-                    id: 'regionais_sc',
-                    title: 'Conhecimentos Regionais de Santa Catarina',
-                    topics: [
-                        'História do Estado de Santa Catarina.',
-                        'Geografia do Estado de Santa Catarina.',
-                        'Cultura do Estado de Santa Catarina.',
-                        'Política do Estado de Santa Catarina.',
-                        'Economia do Estado de Santa Catarina.'
+                        "Conceitos de Banco de Dados Relacionais e SQL",
+                        "Modelagem dimensional e Data Warehouse",
+                        "Conceitos de Business Intelligence e Dashboards",
+                        "Noções de Linguagem Python para Análise de Dados",
+                        "Governança de Dados e LGPD",
+                        "Segurança da Informação e Criptografia"
                     ]
                 }
             ],
-            ce: [
+            p2: [
                 {
-                    id: 'ciclo_planejamento',
-                    title: 'Ciclo de Planejamento e Gestão Orçamentária',
+                    id: "p2_ciclo_orcamentario",
+                    title: "Ciclo de Planejamento e Gestão Orçamentária",
                     topics: [
-                        'O processo de planejamento público no Brasil: Plano Plurianual (PPA), Lei de Diretrizes Orçamentárias (LDO) e Lei Orçamentária Anual (LOA).',
-                        'Conceitos e funções econômicas no orçamento público.',
-                        'Emendas Parlamentares.',
-                        'Revisão de Gastos (Spending Review).',
-                        'Técnicas orçamentárias: orçamento-programa.',
-                        'Execução orçamentária e financeira.',
-                        'Créditos adicionais.',
-                        'Receita e despesa pública. Estágios da receita e despesa pública. Renúncia de receita.',
-                        'Reforma Tributária na Constituição Federal.',
-                        'Manual Técnico de Orçamento MPO/SOF (MTO 2027).',
-                        'Manual de Contabilidade Aplicada ao Setor Público (MCASP).',
-                        'Portaria STN nº 710/2021.',
-                        'Portaria Conjunta STN/SOF nº 163/2001.'
+                        "O processo de planejamento público no Brasil: PPA, LDO e LOA",
+                        "Conceitos e funções econômicas no orçamento público",
+                        "Princípios Orçamentários e suas exceções",
+                        "Classificação institucional, funcional e programática",
+                        "Classificação da Receita Pública por natureza e fontes",
+                        "Estágios da Receita Pública: previsão, lançamento, arrecadação e recolhimento",
+                        "Classificação da Despesa Pública (natureza e funcional)",
+                        "Estágios da Despesa Pública: empenho, liquidação e pagamento",
+                        "Restos a Pagar e Despesas de Exercícios Anteriores",
+                        "Créditos Adicionais: suplementares, especiais e extraordinários"
                     ]
                 },
                 {
-                    id: 'resp_fiscal',
-                    title: 'Responsabilidade Fiscal',
+                    id: "p2_lrf",
+                    title: "Lei de Responsabilidade Fiscal (LC nº 101/2000)",
                     topics: [
-                        'Lei Complementar Federal nº 101/2000 (LRF) e alterações: Anexo de Metas Fiscais, Anexo de Riscos Fiscais, resultados primário e nominal, programação financeira, cronograma de execução mensal de desembolso e limitação de empenho.',
-                        'Receita: Previsão e arrecadação. Renúncia de receita. Receita Corrente Líquida (RCL).',
-                        'Geração de despesas. Despesa obrigatória de caráter continuado.',
-                        'Despesa Total com Pessoal: apuração, limites e medidas de recondução.',
-                        'Transferências voluntárias.',
-                        'Destinação de recursos ao setor privado.',
-                        'Dívida e endividamento. Operações de crédito. Garantias e contragarantias.',
-                        'Disponibilidade de caixa e restos a pagar.',
-                        'Transparência da gestão fiscal. Controle e fiscalização. Relatório de Gestão Fiscal (RGF) e Relatório Resumido da Execução Orçamentária (RREO).'
+                        "Princípios, objetivos e abrangência da LRF",
+                        "Planejamento: Anexos de Metas Fiscais e Riscos Fiscais na LDO",
+                        "Receita Corrente Líquida (RCL): conceito e apuração",
+                        "Geração da Despesa Pública e Despesa Obrigatória de Caráter Continuado",
+                        "Despesa Total com Pessoal: limites globais e prudenciais",
+                        "Dívida Pública, Operações de Crédito e Garantias",
+                        "Transparência, Controle e Fiscalização da Gestão Fiscal"
                     ]
                 },
                 {
-                    id: 'gestao_riscos_gov',
-                    title: 'Gestão de Riscos, Governança e Avaliação por Resultados',
+                    id: "p2_gestao_riscos_custos",
+                    title: "Gestão de Riscos, Custos e Avaliação de Políticas Públicas",
                     topics: [
-                        'Gestão de Riscos Fiscais e Riscos Organizacionais.',
-                        'Governança pública: princípios de liderança, estratégia e controle.',
-                        'Gestão por resultados no setor público: indicadores de desempenho (eficiência, eficácia, efetividade, economicidade e execução).',
-                        'Desenho, monitoramento e avaliação de políticas públicas.',
-                        'Gestão e monitoramento de processos e projetos.'
+                        "Gestão de Riscos e Controles Internos no Setor Público",
+                        "Modelos COSO-ERM e ABNT NBR ISO 31000",
+                        "Sistema de Custos no Setor Público",
+                        "Indicadores de Desempenho: Eficiência, Eficácia e Efetividade",
+                        "Avaliação Ex-ante e Ex-post de Políticas Públicas"
                     ]
                 },
                 {
-                    id: 'custos_setor_publico',
-                    title: 'Custos no Setor Público',
+                    id: "p2_admin_geral",
+                    title: "Administração Geral e Estratégica",
                     topics: [
-                        'NBC TSP 34 Custos no Setor Público. Conceitos e padrões. Objetos de custos. Centros de responsabilidade. Direcionadores de custos.',
-                        'Custos diretos e indiretos. Custos fixos e variáveis. Métodos de custeio.',
-                        'Sistema de Custos. Funções e responsabilidades. Modelo de gerenciamento de custos. Sistema de Informação de Custos. Implantação do Sistema de Custos.',
-                        'Integração das informações orçamentárias, patrimoniais, financeiras e de custos.',
-                        'Utilização da informação de custos para avaliação de serviços públicos, eficiência, planejamento e tomada de decisão.'
-                    ]
-                },
-                {
-                    id: 'admin_geral',
-                    title: 'Administração Geral',
-                    topics: [
-                        'Teorias da Administração e evolução das escolas administrativas; metáforas organizacionais; funções do administrador.',
-                        'Tipos de organização e estrutura organizacional; Processo decisório e tipos de decisão.',
-                        'Organização Racional do Trabalho; Eficiência e Eficácia; Divisão do trabalho e especialização.',
-                        'Ambientes organizacionais; Organizações formais e informais; Centralização e Descentralização; Departamentalização.',
-                        'Visão sistêmica; Noções básicas de Gerenciamento de Projetos.'
-                    ]
-                },
-                {
-                    id: 'admin_estrategica',
-                    title: 'Administração Estratégica',
-                    topics: [
-                        'Planejamento Estratégico: definição de missão, visão e valores; diagnóstico do ambiente externo e interno.',
-                        'Formulação, implementação e controle da estratégia.',
-                        'Ferramentas de diagnóstico: análise SWOT, cinco forças competitivas de Porter, Cadeia de Valor.'
+                        "Evolução do pensamento administrativo",
+                        "Processo Organizacional: Planejamento, Organização, Direção e Controle",
+                        "Planejamento Estratégico: Matriz SWOT, BSC e OKRs",
+                        "Gestão de Processos (BPM) e Melhoria Contínua",
+                        "Gestão de Projetos: PMBOK e Metodologias Ágeis"
                     ]
                 }
             ]
         };
 
-        const STORAGE_KEY = 'sefaz_sc_a01_study_tracker_v2';
-
+        // Estado Global da Aplicação
         let appState = {
             theme: 'dark',
-            progress: {},
-            filters: {
-                cg: { query: '', status: 'all' },
-                ce: { query: '', status: 'all' }
-            }
+            activeTab: 'p1',
+            progress: {} 
+            // Estrutura por topicKey:
+            // { theory: bool, theoryDate: str, revisions: [str], exerciseSessions: [{date, qty, acc}], link: str, notes: str }
         };
 
-        document.addEventListener('DOMContentLoaded', () => {
-            loadAppState();
-            applyTheme();
-            renderAllSyllabus();
-            updateDashboard();
-        });
-
-        function loadAppState() {
-            const saved = localStorage.getItem(STORAGE_KEY);
+        // Carregar do LocalStorage
+        function loadState() {
+            const saved = localStorage.getItem('sefaz_sc_study_app');
             if (saved) {
                 try {
-                    const parsed = JSON.parse(saved);
-                    appState.progress = parsed.progress || {};
-                    appState.theme = parsed.theme || 'dark';
-                } catch (e) { console.error(e); }
+                    appState = JSON.parse(saved);
+                } catch (e) {
+                    console.error("Erro ao carregar dados salvos:", e);
+                }
             }
+            if (!appState.progress) appState.progress = {};
+            applyTheme();
+            updateCountdown();
+            renderAll();
         }
 
-        function saveAppState() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify({ progress: appState.progress, theme: appState.theme }));
-            updateDashboard();
+        function saveState() {
+            localStorage.setItem('sefaz_sc_study_app', JSON.stringify(appState));
+            updateStats();
         }
 
+        // Alternar Tema
         function toggleTheme() {
             appState.theme = appState.theme === 'dark' ? 'light' : 'dark';
             applyTheme();
-            saveAppState();
+            saveState();
         }
 
         function applyTheme() {
-            const icon = document.getElementById('themeIcon');
-            const label = document.getElementById('themeLabel');
-            if (appState.theme === 'light') {
-                document.body.classList.add('light-theme');
-                if (icon) icon.innerText = '☀️';
-                if (label) label.innerText = 'Modo Claro';
+            document.body.className = appState.theme === 'dark' ? 'theme-dark min-h-full font-sans pb-12' : 'theme-light min-h-full font-sans pb-12';
+            document.getElementById('themeIcon').innerText = appState.theme === 'dark' ? '☀️' : '🌙';
+            document.getElementById('themeLabel').innerText = appState.theme === 'dark' ? 'Modo Claro' : 'Modo Escuro';
+        }
+
+        // Contagem Regressiva
+        function updateCountdown() {
+            const now = new Date();
+            const diffTime = EXAM_DATE - now;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const badge = document.getElementById('countdownBadge');
+            if (diffDays > 0) {
+                badge.innerText = `⏳ Prova em ${diffDays} dias (22/11/2026)`;
             } else {
-                document.body.classList.remove('light-theme');
-                if (icon) icon.innerText = '🌙';
-                if (label) label.innerText = 'Modo Escuro';
+                badge.innerText = `🎯 Prova Hoje!`;
             }
         }
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('bg-btn-panorama', 'text-white', 'shadow-md');
-                btn.classList.add('theme-text-muted');
-            });
+        // Alternar Abas
+        function switchTab(tab) {
+            appState.activeTab = tab;
+            const btnP1 = document.getElementById('tabBtnP1');
+            const btnP2 = document.getElementById('tabBtnP2');
 
-            document.getElementById(tabId).classList.remove('hidden');
-            const activeBtn = document.getElementById('btn-' + tabId);
-            activeBtn.classList.add('bg-btn-panorama', 'text-white', 'shadow-md');
-            activeBtn.classList.remove('theme-text-muted');
+            if (tab === 'p1') {
+                btnP1.className = "px-5 py-3 font-semibold text-sm border-b-2 border-emerald-400 text-emerald-400";
+                btnP2.className = "px-5 py-3 font-semibold text-sm border-b-2 border-transparent theme-text-muted hover:text-white";
+            } else {
+                btnP2.className = "px-5 py-3 font-semibold text-sm border-b-2 border-emerald-400 text-emerald-400";
+                btnP1.className = "px-5 py-3 font-semibold text-sm border-b-2 border-transparent theme-text-muted hover:text-white";
+            }
+            renderSubjects();
         }
 
-        function renderAllSyllabus() {
-            renderSection('cg', SYLLABUS.cg, 'container-cg');
-            renderSection('ce', SYLLABUS.ce, 'container-ce');
-        }
-
-        function renderSection(sectionKey, subjects, containerId) {
-            const container = document.getElementById(containerId);
+        // Renderizar Lista de Disciplinas
+        function renderSubjects() {
+            const container = document.getElementById('subjectList');
             container.innerHTML = '';
 
-            subjects.forEach((subject, subjectIdx) => {
-                const subjectCard = document.createElement('div');
-                subjectCard.className = 'theme-card border rounded-2xl overflow-hidden shadow-sm';
-                subjectCard.dataset.subjectId = subject.id;
+            const subjects = EDITAL_DATA[appState.activeTab] || [];
 
-                let totalSubjectTopics = subject.topics.length;
-                let studiedSubjectTopics = 0;
+            subjects.forEach(sub => {
+                const subCard = document.createElement('div');
+                subCard.className = 'theme-card rounded-2xl border overflow-hidden shadow-sm';
 
-                subject.topics.forEach((_, topicIdx) => {
-                    const tKey = `${subject.id}_${topicIdx}`;
-                    if (appState.progress[tKey]?.theory) studiedSubjectTopics++;
-                });
+                let topicsHtml = sub.topics.map((top, idx) => renderTopicItem(sub.id, idx, top)).join('');
 
-                const subjectPct = Math.round((studiedSubjectTopics / totalSubjectTopics) * 100) || 0;
-
-                subjectCard.innerHTML = `
-                    <div onclick="toggleAccordion('${subject.id}')" class="p-4 theme-subcard cursor-pointer transition flex items-center justify-between border-b theme-border">
+                subCard.innerHTML = `
+                    <div class="p-4 theme-subcard border-b flex justify-between items-center cursor-pointer" onclick="toggleSubjectAccordion('${sub.id}')">
                         <div class="flex items-center space-x-3">
-                            <span class="p-1.5 rounded-lg bg-indigo-500/10 text-positive font-bold text-xs">${subjectIdx + 1}</span>
-                            <h3 class="font-bold text-base">${subject.title}</h3>
-                            <span class="text-xs px-2.5 py-0.5 rounded-full theme-card border theme-text-muted font-medium">${studiedSubjectTopics}/${totalSubjectTopics} tópicos</span>
+                            <h2 class="font-bold text-base">${sub.title}</h2>
+                            <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20">${sub.topics.length} tópicos</span>
                         </div>
-                        <div class="flex items-center space-x-4">
-                            <div class="w-24 theme-card border rounded-full h-2 hidden sm:block overflow-hidden">
-                                <div class="bg-positive h-2 rounded-full" style="width: ${subjectPct}%"></div>
-                            </div>
-                            <svg id="icon-acc-${subject.id}" class="w-5 h-5 theme-text-muted transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </div>
+                        <span id="arrow_${sub.id}" class="text-xs theme-text-muted transform transition-transform">▼</span>
                     </div>
-
-                    <div id="acc-body-${subject.id}" class="divide-y theme-border">
-                        ${subject.topics.map((topicText, topicIdx) => renderTopicRow(subject.id, topicIdx, topicText)).join('')}
+                    <div id="body_${sub.id}" class="divide-y theme-border">
+                        ${topicsHtml}
                     </div>
                 `;
-
-                container.appendChild(subjectCard);
+                container.appendChild(subCard);
             });
         }
 
-        function renderTopicRow(subjectId, topicIdx, topicText) {
+        // Renderizar um Item de Tópico
+        function renderTopicItem(subjectId, topicIdx, topicText) {
             const topicKey = `${subjectId}_${topicIdx}`;
-            const data = appState.progress[topicKey] || {};
+            const data = appState.progress[topicKey] || {
+                theory: false,
+                theoryDate: '',
+                revisions: [],
+                exerciseSessions: [],
+                link: '',
+                notes: ''
+            };
 
-            const theoryChecked = data.theory ? 'checked' : '';
-            const theoryDate = data.theoryDate || '';
+            // Totais de exercícios
+            let totalQty = 0;
+            let totalAcc = 0;
+            (data.exerciseSessions || []).forEach(s => {
+                totalQty += Number(s.qty || 0);
+                totalAcc += Number(s.acc || 0);
+            });
+            let accPct = totalQty > 0 ? Math.round((totalAcc / totalQty) * 100) : 0;
 
-            const r1Checked = data.r1 ? 'checked' : '';
-            const r2Checked = data.r2 ? 'checked' : '';
-            const r3Checked = data.r3 ? 'checked' : '';
-            const revDate = data.revDate || '';
-
-            const exDoneChecked = data.exDone ? 'checked' : '';
-            const exQty = data.exQty !== undefined ? data.exQty : '';
-            const exAcc = data.exAcc !== undefined ? data.exAcc : '';
-            const exDate = data.exDate || '';
-
-            const notes = data.notes || '';
-            const notesOpen = notes.trim().length > 0;
-
-            let accPctText = '--';
-            if (exQty > 0 && exAcc !== '') {
-                accPctText = `${Math.round((exAcc / exQty) * 100)}%`;
-            }
+            const hasLink = data.link && data.link.trim().length > 0;
+            const hasNotes = data.notes && data.notes.trim().length > 0;
 
             return `
-                <div class="p-4 transition space-y-3 topic-row" id="row-${topicKey}">
+                <div class="p-4 space-y-3" id="topic_row_${topicKey}">
+                    <!-- Linha Superior do Tópico -->
                     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-                        <div class="flex-1 pr-2">
-                            <span class="text-xs font-semibold theme-text-muted mr-1.5">#${topicIdx + 1}</span>
-                            <span class="text-sm font-medium leading-snug">${topicText}</span>
+                        <div class="flex-1 min-w-0 pr-2">
+                            <span class="text-xs font-bold theme-text-muted mr-2">#${topicIdx + 1}</span>
+                            <span class="text-sm font-medium leading-normal break-words">${topicText}</span>
                         </div>
 
-                        <div class="flex flex-wrap items-center gap-3 text-xs">
-                            <div class="flex items-center space-x-1.5 theme-subcard p-2 rounded-xl border theme-border">
-                                <input type="checkbox" id="theory_${topicKey}" ${theoryChecked} onchange="updateTopicData('${topicKey}')" class="w-4 h-4 rounded cursor-pointer">
+                        <!-- Ações Rápidas de Teoria e Resumo -->
+                        <div class="flex flex-wrap items-center gap-2">
+                            <!-- Teoria Checkbox + Data -->
+                            <div class="flex items-center space-x-1.5 theme-subcard p-1.5 px-3 rounded-xl border text-xs">
+                                <input type="checkbox" id="theory_${topicKey}" ${data.theory ? 'checked' : ''} onchange="toggleTheory('${topicKey}')" class="w-4 h-4 rounded cursor-pointer accent-emerald-500">
                                 <label for="theory_${topicKey}" class="font-semibold cursor-pointer">Teoria</label>
-                                <input type="date" id="theoryDate_${topicKey}" value="${theoryDate}" onchange="updateTopicData('${topicKey}')" class="theme-input border text-[11px] rounded px-1.5 py-0.5 focus:outline-none">
+                                <input type="date" value="${data.theoryDate || ''}" onchange="updateTheoryDate('${topicKey}', this.value)" class="theme-input border text-[11px] rounded px-1 py-0.5 focus:outline-none">
                             </div>
 
-                            <div class="flex items-center space-x-2 theme-subcard p-2 rounded-xl border theme-border">
-                                <span class="theme-text-muted font-semibold text-[11px] uppercase mr-0.5">Revisões:</span>
-                                <label class="flex items-center space-x-1 cursor-pointer">
-                                    <input type="checkbox" id="r1_${topicKey}" ${r1Checked} onchange="updateTopicData('${topicKey}')" class="w-3.5 h-3.5 rounded">
-                                    <span>R1</span>
-                                </label>
-                                <label class="flex items-center space-x-1 cursor-pointer">
-                                    <input type="checkbox" id="r2_${topicKey}" ${r2Checked} onchange="updateTopicData('${topicKey}')" class="w-3.5 h-3.5 rounded">
-                                    <span>R2</span>
-                                </label>
-                                <label class="flex items-center space-x-1 cursor-pointer">
-                                    <input type="checkbox" id="r3_${topicKey}" ${r3Checked} onchange="updateTopicData('${topicKey}')" class="w-3.5 h-3.5 rounded">
-                                    <span>R3</span>
-                                </label>
-                                <input type="date" id="revDate_${topicKey}" value="${revDate}" onchange="updateTopicData('${topicKey}')" class="theme-input border text-[11px] rounded px-1.5 py-0.5 focus:outline-none">
+                            <!-- Botão de Caderno de Questões -->
+                            ${hasLink ? `
+                                <a href="${data.link}" target="_blank" class="px-3 py-1.5 bg-blue-600/20 text-blue-400 border border-blue-500/30 hover:bg-blue-600/30 rounded-xl text-xs font-semibold flex items-center gap-1">
+                                    🔗 Abrir Caderno TEC
+                                </a>
+                            ` : ''}
+
+                            <!-- Badge de Acurácia -->
+                            <div class="px-2.5 py-1.5 theme-subcard border rounded-xl font-mono text-xs font-bold ${accPct >= 80 ? 'text-emerald-400' : accPct >= 60 ? 'text-amber-400' : 'text-rose-400'}">
+                                ${totalQty > 0 ? `${accPct}% acertos (${totalAcc}/${totalQty})` : 'Sem questões'}
                             </div>
 
-                            <div class="flex items-center space-x-2 theme-subcard p-2 rounded-xl border theme-border">
-                                <label class="flex items-center space-x-1 cursor-pointer">
-                                    <input type="checkbox" id="exDone_${topicKey}" ${exDoneChecked} onchange="updateTopicData('${topicKey}')" class="w-3.5 h-3.5 rounded">
-                                    <span class="font-semibold">Exercícios</span>
-                                </label>
-                                <input type="number" id="exQty_${topicKey}" value="${exQty}" placeholder="Qtd" oninput="updateTopicData('${topicKey}')" class="w-12 theme-input border text-center text-[11px] rounded py-0.5 focus:outline-none" min="0">
-                                <input type="number" id="exAcc_${topicKey}" value="${exAcc}" placeholder="Acertos" oninput="updateTopicData('${topicKey}')" class="w-12 theme-input border text-center text-[11px] rounded py-0.5 focus:outline-none" min="0">
-                                <span id="badgeAcc_${topicKey}" class="px-1.5 py-0.5 theme-card border rounded font-mono font-bold text-[10px] text-positive">${accPctText}</span>
-                                <input type="date" id="exDate_${topicKey}" value="${exDate}" onchange="updateTopicData('${topicKey}')" class="theme-input border text-[11px] rounded px-1.5 py-0.5 focus:outline-none">
-                            </div>
-
-                            <button onclick="toggleNotes('${topicKey}')" class="p-2 theme-subcard border theme-text-muted hover:opacity-100 rounded-xl">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            <!-- Botão Expandir Detalhes -->
+                            <button onclick="toggleDetails('${topicKey}')" class="px-3 py-1.5 theme-subcard border hover:opacity-80 rounded-xl text-xs font-semibold flex items-center gap-1">
+                                ⚙️ Detalhes & Histórico
                             </button>
                         </div>
                     </div>
 
-                    <div id="notesBox_${topicKey}" class="${notesOpen ? '' : 'hidden'} pt-1">
-                        <textarea id="notes_${topicKey}" oninput="updateTopicData('${topicKey}')" placeholder="Observações e notas do tópico..." class="w-full theme-input border rounded-xl p-2.5 text-xs focus:outline-none h-20 resize-y"></textarea>
+                    <!-- Painel Expansível de Detalhes -->
+                    <div id="details_${topicKey}" class="hidden pt-3 border-t theme-border space-y-4">
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Coluna 1: Adicionar Treino e Revisões -->
+                            <div class="space-y-3">
+                                <!-- Adicionar Sessão de Exercícios -->
+                                <div class="theme-subcard p-3 rounded-xl border space-y-2">
+                                    <h4 class="text-xs font-bold uppercase tracking-wider text-amber-400">➕ Registrar Nova Sessão de Exercícios</h4>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <div>
+                                            <label class="text-[10px] theme-text-muted block">Qtd Questões</label>
+                                            <input type="number" id="exQty_input_${topicKey}" placeholder="Ex: 20" class="w-full theme-input border rounded p-1 text-xs text-center">
+                                        </div>
+                                        <div>
+                                            <label class="text-[10px] theme-text-muted block">Acertos</label>
+                                            <input type="number" id="exAcc_input_${topicKey}" placeholder="Ex: 18" class="w-full theme-input border rounded p-1 text-xs text-center">
+                                        </div>
+                                        <div>
+                                            <label class="text-[10px] theme-text-muted block">Data</label>
+                                            <input type="date" id="exDate_input_${topicKey}" value="${new Date().toISOString().split('T')[0]}" class="w-full theme-input border rounded p-1 text-[11px]">
+                                        </div>
+                                    </div>
+                                    <button onclick="addExerciseSession('${topicKey}')" class="w-full py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-semibold rounded-lg text-xs transition">
+                                        Salvar Sessão de Exercícios
+                                    </button>
+                                </div>
+
+                                <!-- Adicionar Registro de Revisão -->
+                                <div class="theme-subcard p-3 rounded-xl border space-y-2">
+                                    <h4 class="text-xs font-bold uppercase tracking-wider text-purple-400">📅 Registrar Data de Revisão</h4>
+                                    <div class="flex items-center space-x-2">
+                                        <input type="date" id="revDate_input_${topicKey}" value="${new Date().toISOString().split('T')[0]}" class="flex-1 theme-input border rounded p-1.5 text-xs">
+                                        <button onclick="addRevision('${topicKey}')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded-lg text-xs transition">
+                                            Adicionar Revisão
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Link do Caderno de Questões -->
+                                <div class="theme-subcard p-3 rounded-xl border space-y-1.5">
+                                    <label class="text-xs font-bold uppercase tracking-wider text-blue-400 block">🔗 Link do Caderno TEC / Questões</label>
+                                    <input type="url" value="${data.link || ''}" onchange="updateLink('${topicKey}', this.value)" placeholder="https://www.tecconcursos.com.br/cadernos/..." class="w-full theme-input border rounded p-1.5 text-xs">
+                                </div>
+                            </div>
+
+                            <!-- Coluna 2: Anotações / Resumo -->
+                            <div class="space-y-2">
+                                <label class="text-xs font-bold uppercase tracking-wider theme-text-muted block">📝 Resumo Rápido & Anotações do Tópico</label>
+                                <textarea oninput="updateNotes('${topicKey}', this.value)" placeholder="Digite aqui resumos, pegadinhas da banca FCC ou leis importantes..." class="w-full h-44 theme-input border rounded-xl p-2.5 text-xs focus:outline-none resize-y">${data.notes || ''}</textarea>
+                                <span class="text-[10px] theme-text-muted block text-right">Salvo automaticamente no navegador</span>
+                            </div>
+                        </div>
+
+                        <!-- Listas de Histórico Registrado -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                            <!-- Histórico de Exercícios -->
+                            <div class="theme-subcard p-3 rounded-xl border">
+                                <h5 class="text-xs font-bold text-amber-400 mb-2">Histórico de Treinos</h5>
+                                ${renderExerciseHistory(topicKey, data.exerciseSessions)}
+                            </div>
+
+                            <!-- Histórico de Revisões -->
+                            <div class="theme-subcard p-3 rounded-xl border">
+                                <h5 class="text-xs font-bold text-purple-400 mb-2">Histórico de Revisões</h5>
+                                ${renderRevisionHistory(topicKey, data.revisions)}
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             `;
         }
 
-        function updateTopicData(topicKey) {
-            const theory = document.getElementById(`theory_${topicKey}`)?.checked || false;
-            const theoryDate = document.getElementById(`theoryDate_${topicKey}`)?.value || '';
+        // Sub-renderizadores de Históricos
+        function renderExerciseHistory(topicKey, sessions) {
+            if (!sessions || sessions.length === 0) {
+                return `<p class="text-xs theme-text-muted italic">Nenhuma sessão registrada ainda.</p>`;
+            }
+            return `
+                <div class="space-y-1 max-h-32 overflow-y-auto pr-1 divide-y theme-border">
+                    ${sessions.map((s, idx) => {
+                        const pct = Math.round((s.acc / s.qty) * 100);
+                        return `
+                            <div class="flex justify-between items-center text-xs py-1">
+                                <span class="theme-text-muted">${s.date}</span>
+                                <span class="font-semibold">${s.acc}/${s.qty} acertos (${pct}%)</span>
+                                <button onclick="removeExerciseSession('${topicKey}',${idx})" class="text-rose-400 hover:underline text-[11px]">Excluir</button>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
 
-            const r1 = document.getElementById(`r1_${topicKey}`)?.checked || false;
-            const r2 = document.getElementById(`r2_${topicKey}`)?.checked || false;
-            const r3 = document.getElementById(`r3_${topicKey}`)?.checked || false;
-            const revDate = document.getElementById(`revDate_${topicKey}`)?.value || '';
+        function renderRevisionHistory(topicKey, revisions) {
+            if (!revisions || revisions.length === 0) {
+                return `<p class="text-xs theme-text-muted italic">Nenhuma revisão registrada ainda.</p>`;
+            }
+            return `
+                <div class="space-y-1 max-h-32 overflow-y-auto pr-1 divide-y theme-border">
+                    ${revisions.map((revDate, idx) => `
+                        <div class="flex justify-between items-center text-xs py-1">
+                            <span class="font-semibold">Revisão #${idx + 1}</span>
+                            <span class="theme-text-muted">${revDate}</span>
+                            <button onclick="removeRevision('${topicKey}',${idx})" class="text-rose-400 hover:underline text-[11px]">Excluir</button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
 
-            const exDone = document.getElementById(`exDone_${topicKey}`)?.checked || false;
-            const exQtyVal = document.getElementById(`exQty_${topicKey}`)?.value;
-            const exAccVal = document.getElementById(`exAcc_${topicKey}`)?.value;
+        // Funções de Manipulação de Dados
+        function getTopicData(topicKey) {
+            if (!appState.progress[topicKey]) {
+                appState.progress[topicKey] = {
+                    theory: false,
+                    theoryDate: '',
+                    revisions: [],
+                    exerciseSessions: [],
+                    link: '',
+                    notes: ''
+                };
+            }
+            return appState.progress[topicKey];
+        }
 
-            const exQty = exQtyVal !== '' ? parseInt(exQtyVal) || 0 : '';
-            const exAcc = exAccVal !== '' ? parseInt(exAccVal) || 0 : '';
-            const exDate = document.getElementById(`exDate_${topicKey}`)?.value || '';
+        function toggleTheory(topicKey) {
+            const data = getTopicData(topicKey);
+            data.theory = !data.theory;
+            if (data.theory && !data.theoryDate) {
+                data.theoryDate = new Date().toISOString().split('T')[0];
+            }
+            saveState();
+            renderAll();
+        }
 
-            const notes = document.getElementById(`notes_${topicKey}`)?.value || '';
+        function updateTheoryDate(topicKey, val) {
+            const data = getTopicData(topicKey);
+            data.theoryDate = val;
+            saveState();
+        }
 
-            const badgeAcc = document.getElementById(`badgeAcc_${topicKey}`);
-            if (badgeAcc) {
-                if (exQty > 0 && exAcc !== '') {
-                    badgeAcc.innerText = `${Math.round((exAcc / exQty) * 100)}%`;
-                } else {
-                    badgeAcc.innerText = '--';
-                }
+        function addExerciseSession(topicKey) {
+            const qtyInput = document.getElementById(`exQty_input_${topicKey}`);
+            const accInput = document.getElementById(`exAcc_input_${topicKey}`);
+            const dateInput = document.getElementById(`exDate_input_${topicKey}`);
+
+            const qty = parseInt(qtyInput.value);
+            const acc = parseInt(accInput.value);
+            const date = dateInput.value;
+
+            if (isNaN(qty) || isNaN(acc) || qty <= 0 || acc < 0 || acc > qty) {
+                alert("Por favor, insira valores válidos para quantidade e acertos (acertos não podem ser maiores que o total).");
+                return;
             }
 
-            appState.progress[topicKey] = {
-                theory, theoryDate,
-                r1, r2, r3, revDate,
-                exDone, exQty, exAcc, exDate,
-                notes
-            };
+            const data = getTopicData(topicKey);
+            if (!data.exerciseSessions) data.exerciseSessions = [];
+            data.exerciseSessions.unshift({ qty, acc, date });
 
-            saveAppState();
+            saveState();
+            renderAll();
         }
 
-        function toggleAccordion(subjectId) {
-            const body = document.getElementById(`acc-body-${subjectId}`);
-            const icon = document.getElementById(`icon-acc-${subjectId}`);
-            if (body.classList.contains('hidden')) {
-                body.classList.remove('hidden');
-                icon.classList.add('rotate-180');
-            } else {
-                body.classList.add('hidden');
-                icon.classList.remove('rotate-180');
+        function removeExerciseSession(topicKey, idx) {
+            const data = getTopicData(topicKey);
+            if (data.exerciseSessions) {
+                data.exerciseSessions.splice(idx, 1);
+                saveState();
+                renderAll();
             }
         }
 
-        function toggleNotes(topicKey) {
-            document.getElementById(`notesBox_${topicKey}`).classList.toggle('hidden');
+        function addRevision(topicKey) {
+            const dateInput = document.getElementById(`revDate_input_${topicKey}`);
+            const date = dateInput.value;
+            if (!date) return;
+
+            const data = getTopicData(topicKey);
+            if (!data.revisions) data.revisions = [];
+            data.revisions.unshift(date);
+
+            saveState();
+            renderAll();
         }
 
-        function updateDashboard() {
+        function removeRevision(topicKey, idx) {
+            const data = getTopicData(topicKey);
+            if (data.revisions) {
+                data.revisions.splice(idx, 1);
+                saveState();
+                renderAll();
+            }
+        }
+
+        function updateLink(topicKey, val) {
+            const data = getTopicData(topicKey);
+            data.link = val;
+            saveState();
+        }
+
+        function updateNotes(topicKey, val) {
+            const data = getTopicData(topicKey);
+            data.notes = val;
+            saveState();
+        }
+
+        function toggleDetails(topicKey) {
+            const el = document.getElementById(`details_${topicKey}`);
+            if (el) el.classList.toggle('hidden');
+        }
+
+        function toggleSubjectAccordion(subId) {
+            const body = document.getElementById(`body_${subId}`);
+            const arrow = document.getElementById(`arrow_${subId}`);
+            if (body) body.classList.toggle('hidden');
+            if (arrow) arrow.classList.toggle('rotate-180');
+        }
+
+        // Atualizar Estatísticas do Topo
+        function updateStats() {
             let totalTopics = 0;
-            let theoryDoneCount = 0;
-            let totalRevisionsCount = 0;
-            let exercisesDoneCount = 0;
+            let completedTheory = 0;
+            let totalRevisions = 0;
+            let totalExQty = 0;
+            let totalExAcc = 0;
+            let totalSessions = 0;
 
-            let totalQuestionsQty = 0;
-            let totalQuestionsAcc = 0;
+            ['p1', 'p2'].forEach(tab => {
+                EDITAL_DATA[tab].forEach(sub => {
+                    sub.topics.forEach((top, idx) => {
+                        totalTopics++;
+                        const key = `${sub.id}_${idx}`;
+                        const data = appState.progress[key];
 
-            [...SYLLABUS.cg, ...SYLLABUS.ce].forEach(subject => {
-                subject.topics.forEach((_, idx) => {
-                    totalTopics++;
-                    const key = `${subject.id}_${idx}`;
-                    const p = appState.progress[key];
-
-                    if (p) {
-                        if (p.theory) theoryDoneCount++;
-                        if (p.r1) totalRevisionsCount++;
-                        if (p.r2) totalRevisionsCount++;
-                        if (p.r3) totalRevisionsCount++;
-                        if (p.exDone) exercisesDoneCount++;
-
-                        if (typeof p.exQty === 'number' && p.exQty > 0) {
-                            totalQuestionsQty += p.exQty;
-                            if (typeof p.exAcc === 'number') totalQuestionsAcc += p.exAcc;
+                        if (data) {
+                            if (data.theory) completedTheory++;
+                            if (data.revisions) totalRevisions += data.revisions.length;
+                            if (data.exerciseSessions) {
+                                totalSessions += data.exerciseSessions.length;
+                                data.exerciseSessions.forEach(s => {
+                                    totalExQty += Number(s.qty || 0);
+                                    totalExAcc += Number(s.acc || 0);
+                                });
+                            }
                         }
-                    }
+                    });
                 });
             });
 
-            const theoryPct = Math.round((theoryDoneCount / totalTopics) * 100) || 0;
-            const revPct = Math.round((totalRevisionsCount / (totalTopics * 3)) * 100) || 0;
-            const exPct = Math.round((exercisesDoneCount / totalTopics) * 100) || 0;
-            const progGeralPct = Math.round((theoryPct * 0.5) + (revPct * 0.25) + (exPct * 0.25)) || 0;
-            const accRatePct = totalQuestionsQty > 0 ? Math.round((totalQuestionsAcc / totalQuestionsQty) * 100) : 0;
+            const overallPct = totalTopics > 0 ? Math.round((completedTheory / totalTopics) * 100) : 0;
+            const accPct = totalExQty > 0 ? Math.round((totalExAcc / totalExQty) * 100) : 0;
 
-            document.getElementById('dashProgGeralPct').innerText = `${progGeralPct}%`;
-            document.getElementById('dashProgGeralText').innerText = `${theoryDoneCount} / ${totalTopics} tópicos`;
-            document.getElementById('dashProgGeralBar').style.width = `${progGeralPct}%`;
+            document.getElementById('statOverallPct').innerText = `${overallPct}%`;
+            document.getElementById('statOverallCount').innerText = completedTheory;
 
-            document.getElementById('dashTeoriaPct').innerText = `${theoryPct}%`;
-            document.getElementById('dashTeoriaText').innerText = `${theoryDoneCount} / ${totalTopics}`;
-            document.getElementById('dashTeoriaBar').style.width = `${theoryPct}%`;
+            document.getElementById('statTheoryPct').innerText = `${overallPct}%`;
+            document.getElementById('statTheoryCount').innerText = completedTheory;
 
-            document.getElementById('dashRevPct').innerText = `${revPct}%`;
-            document.getElementById('dashRevText').innerText = `${totalRevisionsCount} / ${totalTopics * 3}`;
-            document.getElementById('dashRevBar').style.width = `${revPct}%`;
+            document.getElementById('statRevCount').innerText = totalRevisions;
 
-            document.getElementById('dashExPct').innerText = `${exPct}%`;
-            document.getElementById('dashExText').innerText = `${exercisesDoneCount} / ${totalTopics}`;
-            document.getElementById('dashExBar').style.width = `${exPct}%`;
+            document.getElementById('statExQty').innerText = totalExQty;
+            document.getElementById('statExSessions').innerText = totalSessions;
 
-            document.getElementById('dashAccPct').innerText = `${accRatePct}%`;
-            document.getElementById('dashQuestText').innerText = `${totalQuestionsQty.toLocaleString('pt-BR')} resolvidos`;
-            document.getElementById('dashAcertosText').innerText = `${totalQuestionsAcc.toLocaleString('pt-BR')} acertos`;
+            document.getElementById('statAccPct').innerText = `${accPct}%`;
+            document.getElementById('statExAcc').innerText = totalExAcc;
         }
 
-        function setStatusFilter(sectionKey, status) {
-            appState.filters[sectionKey].status = status;
-            ['all', 'pending', 'unstudied', 'done'].forEach(s => {
-                const btn = document.getElementById(`btnFilter-${sectionKey}-${s}`);
-                if (s === status) {
-                    btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-btn-panorama text-white";
-                } else {
-                    btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold theme-subcard border theme-text-muted";
-                }
-            });
-            filterTopics(sectionKey);
-        }
-
-        function filterTopics(sectionKey) {
-            const query = (document.getElementById(sectionKey === 'cg' ? 'searchCG' : 'searchCE')?.value || '').toLowerCase();
-            const status = appState.filters[sectionKey].status;
-            const subjects = sectionKey === 'cg' ? SYLLABUS.cg : SYLLABUS.ce;
-
-            subjects.forEach(subject => {
-                let subjectVisibleCount = 0;
-                subject.topics.forEach((topicText, idx) => {
-                    const key = `${subject.id}_${idx}`;
-                    const row = document.getElementById(`row-${key}`);
-                    const data = appState.progress[key] || {};
-
-                    const matchesText = topicText.toLowerCase().includes(query) || subject.title.toLowerCase().includes(query);
-                    let matchesStatus = true;
-
-                    if (status === 'unstudied') matchesStatus = !data.theory;
-                    else if (status === 'pending') matchesStatus = data.theory && (!data.r1 || !data.r2 || !data.r3);
-                    else if (status === 'done') matchesStatus = data.theory && data.r1 && data.r2 && data.r3 && data.exDone;
-
-                    if (matchesText && matchesStatus) {
-                        row.classList.remove('hidden');
-                        subjectVisibleCount++;
-                    } else {
-                        row.classList.add('hidden');
-                    }
-                });
-
-                const card = document.querySelector(`[data-subject-id="${subject.id}"]`);
-                if (card) {
-                    if (subjectVisibleCount > 0) card.classList.remove('hidden');
-                    else card.classList.add('hidden');
-                }
-            });
-        }
-
+        // Exportar e Importar Backup
         function exportBackup() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `SEFAZ_SC_A01_Backup_${new Date().toISOString().slice(0,10)}.json`);
+            downloadAnchor.setAttribute("download", `SEFAZ_SC_Estudos_Backup_${new Date().toISOString().split('T')[0]}.json`);
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
@@ -930,34 +708,40 @@
 
         function importBackup(event) {
             const fileReader = new FileReader();
-            fileReader.onload = function (e) {
+            fileReader.onload = function(e) {
                 try {
-                    const importedData = JSON.parse(e.target.result);
-                    if (importedData && importedData.progress) {
-                        appState.progress = importedData.progress;
-                        if (importedData.theme) appState.theme = importedData.theme;
+                    const importedState = JSON.parse(e.target.result);
+                    if (importedState && importedState.progress) {
+                        appState = importedState;
+                        saveState();
                         applyTheme();
-                        saveAppState();
-                        renderAllSyllabus();
-                        alert('Backup importado com sucesso!');
+                        renderAll();
+                        alert("Backup importado com sucesso!");
                     } else {
-                        alert('Formato de backup inválido.');
+                        alert("Arquivo de backup inválido.");
                     }
                 } catch (err) {
-                    alert('Erro ao processar JSON: ' + err.message);
+                    alert("Erro ao ler arquivo de backup.");
                 }
             };
-            if (event.target.files[0]) fileReader.readAsText(event.target.files[0]);
+            fileReader.readAsText(event.target.files[0]);
         }
 
-        function resetProgress() {
-            if (confirm('Tem certeza de que deseja resetar todo o seu progresso?')) {
+        function resetData() {
+            if (confirm("Tem certeza que deseja apagar TODO o seu progresso? Essa ação não pode ser desfeita.")) {
                 appState.progress = {};
-                saveAppState();
-                renderAllSyllabus();
-                alert('Progresso resetado com sucesso.');
+                saveState();
+                renderAll();
             }
         }
+
+        function renderAll() {
+            renderSubjects();
+            updateStats();
+        }
+
+        // Inicialização
+        window.addEventListener('DOMContentLoaded', loadState);
     </script>
 </body>
 </html>
