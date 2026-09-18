@@ -170,7 +170,139 @@ function stats(){let theory=0,rev=0,qty=0,acc=0,sessions=0;[P1,P2].forEach(list=
 function header(){let d=Math.ceil((EXAM_DATE-new Date())/86400000);return `<header class="card border-b sticky top-0 z-20 backdrop-blur bg-opacity-90"><div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-3"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xl">✓</div><div><h1 class="text-lg font-bold">SEFAZ/SC • Edital nº 01/2026</h1><p class="text-xs muted">Auditor Estadual de Finanças Públicas — Administração e Engenharias (Cargo A01)</p></div></div><div class="flex flex-wrap gap-2 items-center">${supabaseUser?`<span class="text-xs muted">👤 ${supabaseUser.email}</span><button onclick="logout()" class="px-3 py-1.5 rounded-xl text-xs font-semibold sub border">Sair</button>`:`<input id="authEmail" type="email" placeholder="E-mail" class="!w-32"><input id="authPassword" type="password" placeholder="Senha" class="!w-24"><button onclick="login()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-600 text-white">Entrar</button>`}<span class="px-3 py-1.5 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-xs font-semibold">${d>0?'⏳ Prova em '+d+' dias (22/11/2026)':d===0?'🎯 Prova Hoje!':'✅ Prova já realizada'}</span><button onclick="theme()" class="px-3 py-1.5 rounded-xl text-xs font-semibold sub border">${state.theme==='dark'?'☀️ Modo Claro':'🌙 Modo Escuro'}</button><button onclick="exportBackup()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-emerald-600 text-white">💾 Exportar</button><label class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-blue-600 text-white cursor-pointer">📂 Importar<input id="import" type="file" accept=".json" class="hidden" onchange="importBackup(event)"></label><button onclick="resetData()" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-rose-600 text-white">🗑️ Resetar</button></div></div></header>`}
 function cards(){let s=stats();return `<div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">${[['Progresso Edital',s.pct+'%',s.theory+' tópicos','text-emerald-400'],['Teoria Vista',s.pct+'%',s.theory+' concluídos','text-blue-400'],['Revisões Feitas',s.rev,s.sessions+' sessões','text-purple-400'],['Questões Feitas',s.qty,s.sessions+' treinos','text-amber-400'],['Taxa de Acertos',s.accPct+'%',s.acc+' acertos','text-emerald-400']].map(x=>`<div class="card p-4 rounded-2xl border"><span class="text-[11px] font-bold uppercase tracking-wider muted">${x[0]}</span><div class="text-2xl font-extrabold mt-1 ${x[3]}">${x[1]}</div><div class="text-xs muted mt-1">${x[2]}</div></div>`).join('')}</div>`}
 function overview(){return `<div class="space-y-6"><div class="grid grid-cols-1 lg:grid-cols-3 gap-6">${[['💼 Cargo e Vagas',['Cargo|Auditor Estadual de Finanças Públicas','Área|Administração e Engenharias (A01)','Remuneração Inicial|R$ 25.337,61','Carga Horária|40 horas semanais','Vagas|5 ampla + 1 PcD']],['📅 Inscrições e Datas',['Inscrições|04/09 a 05/10/2026','Taxa|R$ 200,00 (DARE)','Data das provas|22/11/2026','Banca|FCC']],['⏱️ Aplicação das Provas',['Local|Florianópolis/SC','P1|Conhecimentos Gerais — manhã (4h)','P2|Conhecimentos Específicos — tarde (5h)','Formato|Objetiva (A a E)']]].map(x=>`<div class="card p-5 rounded-2xl border"><h3 class="font-bold mb-3">${x[0]}</h3>${x[1].map(y=>{let a=y.split('|');return `<div class="flex justify-between gap-3 py-1.5 border-b text-xs" style="border-color:var(--border)"><span class="muted">${a[0]}</span><b class="text-right">${a[1]}</b></div>`}).join('')}</div>`).join('')}</div><div class="card p-5 rounded-2xl border"><h3 class="font-bold mb-3">📊 Estrutura das Provas</h3><div class="grid md:grid-cols-2 gap-3"><div class="sub p-4 rounded-xl border"><b class="text-amber-400">PROVA 1 — Conhecimentos Gerais · Peso 1</b><p class="text-xs muted mt-1">80 questões · manhã · 4 horas · ${P1.length} disciplinas</p></div><div class="sub p-4 rounded-xl border"><b class="text-cyan-400">PROVA 2 — Conhecimentos Específicos · Peso 2</b><p class="text-xs muted mt-1">100 questões · tarde · 5 horas · ${P2.length} disciplinas</p></div></div></div></div>`}
-function topic(sid,i,text){let k=sid+'_'+i,d=data(k),open=!!state.openTopics[k],qty=(d.exerciseSessions||[]).reduce((n,x)=>n+(+x.qty||0),0),acc=(d.exerciseSessions||[]).reduce((n,x)=>n+(+x.acc||0),0),pct=qty?Math.round(acc/qty*100):0;return `<div class="topic border rounded-xl p-4 ${d.theory?'bg-emerald-500/10':''}"><div class="flex flex-col lg:flex-row justify-between gap-3"><label class="flex gap-3 flex-1 cursor-pointer"><input type="checkbox" ${d.theory?'checked':''} onchange="toggleTheory('${k}',this.checked)" class="mt-1 w-4 h-4"><span class="text-sm ${d.theory?'line-through opacity-70':''}"><b class="muted mr-2">#${i+1}</b>${text}</span></label><div class="flex flex-wrap items-center gap-2"><span class="px-2.5 py-1.5 sub border rounded-xl text-xs font-bold ${pct>=80?'text-emerald-400':pct>=60?'text-amber-400':'text-rose-400'}">${qty?pct+'% ('+acc+'/'+qty+')':'Sem exercícios'}</span>${d.link?`<a href="${d.link}" target="_blank" class="px-3 py-1.5 text-blue-400 border border-blue-500/30 rounded-xl text-xs">🔗 Caderno</a>`:''}<button onclick="topicOpen('${k}')" class="px-3 py-1.5 sub border rounded-xl text-xs font-semibold">⚙️ ${open?'Fechar':'Detalhes'}</button></div></div>${open?details(k,d):''}</div>`}
+function formatDateBR(value) {
+  if (!value) return '';
+
+  const [year, month, day] = String(value).slice(0, 10).split('-');
+
+  if (!year || !month || !day) return value;
+
+  return `${day}/${month}/${year}`;
+}
+
+function latestInteractionDate(d) {
+  const dates = [
+    d.theory && d.theoryDate ? d.theoryDate : '',
+    ...(Array.isArray(d.revisions) ? d.revisions : []),
+    ...(Array.isArray(d.exerciseSessions)
+      ? d.exerciseSessions.map(session => session.date)
+      : [])
+  ]
+    .filter(Boolean)
+    .map(value => String(value).slice(0, 10))
+    .filter(value => /^\d{4}-\d{2}-\d{2}$/.test(value));
+
+  if (!dates.length) return null;
+
+  return dates.reduce((latest, current) => {
+    return current > latest ? current : latest;
+  });
+}
+
+function recencyBadge(d) {
+  const latestDate = latestInteractionDate(d);
+
+  if (!latestDate) {
+    return {
+      label: '⚪ Sem registros',
+      classes: 'text-slate-300 border-slate-500/30 bg-slate-500/10'
+    };
+  }
+
+  const todayDate = new Date();
+  const interactionDate = new Date(`${latestDate}T00:00:00`);
+
+  todayDate.setHours(0, 0, 0, 0);
+  interactionDate.setHours(0, 0, 0, 0);
+
+  const diasSemVer = Math.max(
+    0,
+    Math.floor((todayDate - interactionDate) / 86400000)
+  );
+
+  if (diasSemVer <= 7) {
+    return {
+      label: `🟢 Há ${diasSemVer}d`,
+      classes: 'text-emerald-300 border-emerald-500/30 bg-emerald-500/10'
+    };
+  }
+
+  if (diasSemVer <= 30) {
+    return {
+      label: `🟡 Há ${diasSemVer}d`,
+      classes: 'text-amber-300 border-amber-500/30 bg-amber-500/10'
+    };
+  }
+
+  return {
+    label: `🔴 Há ${diasSemVer}d - Revisar`,
+    classes: 'text-rose-300 border-rose-500/40 bg-rose-500/15'
+  };
+}
+function topic(sid,i,text) {
+  let k=sid+'_'+i,
+      d=data(k),
+      open=!!state.openTopics[k],
+      qty=(d.exerciseSessions||[]).reduce((n,x)=>n+(+x.qty||0),0),
+      acc=(d.exerciseSessions||[]).reduce((n,x)=>n+(+x.acc||0),0),
+      pct=qty?Math.round(acc/qty*100):0,
+      recency=recencyBadge(d);
+
+  const theoryBadge=d.theory&&d.theoryDate
+    ? `<span class="px-2.5 py-1.5 sub border rounded-xl text-xs font-semibold text-blue-300 border-blue-500/30 bg-blue-500/10">📖 ${formatDateBR(d.theoryDate)}</span>`
+    : '';
+
+  return `<div class="topic border rounded-xl p-4 ${d.theory?'bg-emerald-500/10':''}">
+    <div class="flex flex-col lg:flex-row justify-between gap-3">
+      <label class="flex gap-3 flex-1 cursor-pointer">
+        <input
+          type="checkbox"
+          ${d.theory?'checked':''}
+          onchange="toggleTheory('${k}',this.checked)"
+          class="mt-1 w-4 h-4"
+        >
+        <span class="text-sm ${d.theory?'line-through opacity-70':''}">
+          <b class="muted mr-2">#${i+1}</b>${text}
+        </span>
+      </label>
+
+      <div class="flex flex-wrap items-center gap-2">
+        ${theoryBadge}
+
+        <span class="px-2.5 py-1.5 border rounded-xl text-xs font-semibold ${recency.classes}">
+          ${recency.label}
+        </span>
+
+        <span class="px-2.5 py-1.5 sub border rounded-xl text-xs font-bold ${
+          pct>=80
+            ? 'text-emerald-400'
+            : pct>=60
+              ? 'text-amber-400'
+              : 'text-rose-400'
+        }">
+          ${qty?pct+'% ('+acc+'/'+qty+')':'Sem exercícios'}
+        </span>
+
+        ${d.link
+          ? `<a
+               href="${d.link}"
+               target="_blank"
+               class="px-3 py-1.5 text-blue-400 border border-blue-500/30 rounded-xl text-xs"
+             >🔗 Caderno</a>`
+          : ''}
+
+        <button
+          onclick="topicOpen('${k}')"
+          class="px-3 py-1.5 sub border rounded-xl text-xs font-semibold"
+        >
+          ⚙️ ${open?'Fechar':'Detalhes'}
+        </button>
+      </div>
+    </div>
+
+    ${open?details(k,d):''}
+  </div>`;
+}
 function details(k,d){return `<div class="pt-4 mt-3 border-t space-y-4" style="border-color:var(--border)"><div class="grid md:grid-cols-2 gap-4"><div class="space-y-3"><div class="sub p-3 rounded-xl border"><b class="text-xs text-emerald-400">📖 Data da teoria</b><div class="flex gap-2 mt-2"><input id="td_${k}" type="date" max="${today()}" value="${d.theoryDate||today()}"><button onclick="saveTheory('${k}')" class="bg-emerald-600 text-white rounded-lg px-3 text-xs">Salvar</button></div></div><div class="sub p-3 rounded-xl border"><b class="text-xs text-amber-400">➕ Sessão de exercícios</b><div class="grid grid-cols-3 gap-2 mt-2"><input id="q_${k}" type="number" placeholder="Qtd"><input id="a_${k}" type="number" placeholder="Acertos"><input id="ed_${k}" type="date" max="${today()}" value="${today()}"></div><button onclick="addExercise('${k}')" class="w-full bg-amber-600 text-white rounded-lg py-1.5 mt-2 text-xs">Salvar Sessão</button></div><div class="sub p-3 rounded-xl border"><b class="text-xs text-purple-400">📅 Data de revisão</b><div class="flex gap-2 mt-2"><input id="rd_${k}" type="date" max="${today()}" value="${today()}"><button onclick="addRevision('${k}')" class="bg-purple-600 text-white rounded-lg px-3 text-xs">Adicionar</button></div></div><div class="sub p-3 rounded-xl border"><b class="text-xs text-blue-400">🔗 Link do Caderno TEC / Questões</b><div class="flex gap-2 mt-2"><input id="ln_${k}" type="url" value="${d.link||''}" placeholder="https://..."><button onclick="saveLink('${k}')" class="bg-blue-600 text-white rounded-lg px-3 text-xs">Salvar</button></div></div></div><div><label class="text-xs font-bold muted">📝 Resumo e anotações</label><textarea id="nt_${k}" oninput="state.progress['${k}'].notes=this.value;save()" rows="12" class="mt-2" placeholder="Resumos, pegadinhas ou leis importantes...">${d.notes||''}</textarea><span class="text-[10px] muted block text-right">Salvo automaticamente</span></div></div><div class="grid md:grid-cols-2 gap-4"><div class="sub p-3 rounded-xl border"><b class="text-xs text-amber-400">Histórico de treinos</b>${d.exerciseSessions.length?d.exerciseSessions.map((x,i)=>`<div class="flex justify-between text-xs py-1"><span>${x.date}</span><span>${x.acc}/${x.qty}</span><button class="text-rose-400" onclick="removeExercise('${k}',${i})">Excluir</button></div>`).join(''):'<p class="text-xs muted italic mt-2">Nenhum treino registrado.</p>'}</div><div class="sub p-3 rounded-xl border"><b class="text-xs text-purple-400">Histórico de revisões</b>${d.revisions.length?d.revisions.map((x,i)=>`<div class="flex justify-between text-xs py-1"><span>Revisão #${i+1}</span><span>${x}</span><button class="text-rose-400" onclick="removeRevision('${k}',${i})">Excluir</button></div>`).join(''):'<p class="text-xs muted italic mt-2">Nenhuma revisão registrada.</p>'}</div></div></div>`}
 function subjectsView(tab){let list=subjects(tab),filter=state.filter;return `<div class="space-y-4"><div class="card p-4 rounded-2xl border flex flex-wrap items-center gap-3"><label class="text-sm font-semibold">Filtrar por disciplina:</label><select onchange="state.filter=this.value;save();render()" class="flex-1 md:max-w-md"><option value="all">Todas as disciplinas</option>${list.map((s,i)=>`<option value="${tab+i}" ${filter===tab+i?'selected':''}>${s[0]}</option>`).join('')}</select><span class="text-xs muted">${list.length} disciplinas</span></div>${list.map((s,si)=>({s,si})).filter(x=>filter==='all'||filter===tab+x.si).map(({s,si})=>{let sid=tab+si,open=state.openSubjects[sid]!==false,n=s[1].filter((_,i)=>data(sid+'_'+i).theory).length;return `<section class="card rounded-2xl border overflow-hidden"><button onclick="state.openSubjects['${sid}']=!${open};save();render()" class="w-full text-left p-4 sub border-b flex justify-between items-center"><div><h2 class="font-bold">${si+1}. ${s[0]}</h2><span class="text-xs muted">${n}/${s[1].length} tópicos estudados</span></div><span class="text-emerald-400 font-bold">${Math.round(n/s[1].length*100)}% ${open?'▲':'▼'}</span></button>${open?`<div class="p-3 space-y-2">${s[1].map((t,i)=>topic(sid,i,t)).join('')}</div>`:''}</section>`}).join('')}</div>`}
 function render(){let s=stats();document.getElementById('app').innerHTML=header()+`<main class="max-w-7xl mx-auto px-4 py-6">${cards()}<nav class="flex border-b mb-6 overflow-x-auto" style="border-color:var(--border)">${[['overview','📋 Panorama do Edital'],['p1','📘 Conhecimentos Gerais (P1)'],['p2','📙 Conhecimentos Específicos (P2 — Peso 2)']].map(x=>`<button onclick="state.tab='${x[0]}';state.filter='all';save();render()" class="px-5 py-3 font-semibold text-sm whitespace-nowrap ${state.tab===x[0]?'border-b-2 border-emerald-400 text-emerald-400':'muted'}">${x[1]}</button>`).join('')}</nav>${state.tab==='overview'?overview():subjectsView(state.tab)}</main>`}
