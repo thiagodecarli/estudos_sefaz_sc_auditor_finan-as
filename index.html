@@ -128,7 +128,42 @@ async function logout() {
   document.body.className = state.theme;
   render();
 }
-function today(){return new Date().toISOString().slice(0,10)}
+async function login() {
+  const email = document.getElementById('authEmail')?.value.trim();
+  const password = document.getElementById('authPassword')?.value;
+
+  if (!email || !password) {
+    alert('Informe e-mail e senha.');
+    return;
+  }
+
+  const button = document.querySelector('button[onclick="login()"]');
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = 'Entrando...';
+  }
+
+  const { error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    console.error('Erro ao fazer login:', error);
+    alert('Não foi possível entrar: ' + error.message);
+
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Entrar';
+    }
+
+    return;
+  }
+
+  await load();
+}
+ function today(){return new Date().toISOString().slice(0,10)}
 function data(k){if(!state.progress[k])state.progress[k]={theory:false,theoryDate:'',revisions:[],exerciseSessions:[],link:'',notes:''};let d=state.progress[k];d.revisions=Array.isArray(d.revisions)?d.revisions:[];d.exerciseSessions=Array.isArray(d.exerciseSessions)?d.exerciseSessions:[];return d}
 function allTopics(){return [...P1,...P2].reduce((n,s)=>n+s[1].length,0)}
 function stats(){let theory=0,rev=0,qty=0,acc=0,sessions=0;[P1,P2].forEach(list=>list.forEach((s,si)=>s[1].forEach((_,i)=>{let d=state.progress[(list===P1?'p1':'p2')+si+'_'+i];if(d){if(d.theory)theory++;rev+=(d.revisions||[]).length;sessions+=(d.exerciseSessions||[]).length;(d.exerciseSessions||[]).forEach(x=>{qty+=+x.qty||0;acc+=+x.acc||0})}})));return{total:allTopics(),theory,rev,qty,acc,sessions,pct:Math.round(theory/allTopics()*100),accPct:qty?Math.round(acc/qty*100):0}}
